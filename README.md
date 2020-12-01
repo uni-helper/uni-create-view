@@ -8,6 +8,8 @@
 - 支持深度目录创建, 自动查找`src`目录下路径
 - 写入`pages.json`后依然保留注释
 
+github：[https://github.com/TuiMao233/create-uniapp-view](https://github.com/TuiMao233/create-uniapp-view)
+
 ### 基本使用（创建 page | component ）
 
 ![](https://pshangcheng.wsandos.com/pic/16015205724578)
