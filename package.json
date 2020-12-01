@@ -85,6 +85,10 @@
       ]
     }
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TuiMao233/create-uniapp-view.git"
+  },
   "scripts": {
     "vscode:prepublish": "npm run compile",
     "compile": "tsc -p ./",
