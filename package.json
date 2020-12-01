@@ -1,0 +1,112 @@
+{
+  "name": "create-uniapp-view",
+  "displayName": "create-uniapp-view",
+  "keywords": [
+    "uniapp",
+    "page",
+    "components"
+  ],
+  "publisher": "mrmaoddxxaa",
+  "description": "快速创建uniapp视图与组件!",
+  "version": "1.3.4",
+  "engines": {
+    "vscode": "^1.47.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "icon": "images/icon.png",
+  "activationEvents": [
+    "onCommand:create-uniapp-view.createPage",
+    "onCommand:create-uniapp-view.createComponent"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "configuration": {
+      "title": "create-uniapp-view-options",
+      "properties": {
+        "create-uniapp-view.typescript": {
+          "type": "boolean",
+          "default": false,
+          "description": "创建视图时是否选择 TypeScript 为默认语言"
+        },
+        "create-uniapp-view.directory": {
+          "type": "boolean",
+          "default": true,
+          "description": "创建视图时是否创建同名文件夹"
+        },
+        "create-uniapp-view.style": {
+          "type": [
+            "string"
+          ],
+          "default": "css",
+          "enum": [
+            "css",
+            "scss",
+            "less",
+            "stylus",
+            "sass"
+          ],
+          "description": "创建视图时 CSS 预处理器的类型"
+        }
+      }
+    },
+    "commands": [
+      {
+        "command": "create-uniapp-view.createPage",
+        "title": "新建uniapp页面"
+      },
+      {
+        "command": "create-uniapp-view.createSubcontractPage",
+        "title": "新建uniapp页面(分包)"
+      },
+      {
+        "command": "create-uniapp-view.createComponent",
+        "title": "新建uniapp组件"
+      }
+    ],
+    "menus": {
+      "explorer/context": [
+        {
+          "group": "navigation@8",
+          "command": "create-uniapp-view.createPage",
+          "title": "新建uniapp页面"
+        },
+        {
+          "group": "navigation@9",
+          "command": "create-uniapp-view.createSubcontractPage",
+          "title": "新建uniapp页面(分包)"
+        },
+        {
+          "group": "navigation@9",
+          "command": "create-uniapp-view.createComponent",
+          "title": "新建uniapp组件"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "lint": "eslint src --ext ts",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "test": "node ./out/test/runTest.js"
+  },
+  "dependencies": {
+    "comment-json": "^4.1.0"
+  },
+  "devDependencies": {
+    "@types/glob": "^7.1.1",
+    "@types/mocha": "^7.0.2",
+    "@types/node": "^13.13.30",
+    "@types/vscode": "^1.47.0",
+    "@typescript-eslint/eslint-plugin": "^2.30.0",
+    "@typescript-eslint/parser": "^2.30.0",
+    "eslint": "^6.8.0",
+    "glob": "^7.1.6",
+    "mocha": "^7.1.2",
+    "typescript": "^3.8.3",
+    "vscode-test": "^1.3.0"
+  }
+}
