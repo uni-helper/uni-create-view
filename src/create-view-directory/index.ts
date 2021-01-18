@@ -1,8 +1,8 @@
 /*
  * @Author: 毛先生
  * @Date: 2020-08-04 11:06:12
- * @LastEditTime: 2020-08-19 15:16:53
- * @LastEditors: 毛先生
+ * @LastEditTime: 2021-01-18 19:22:44
+ * @LastEditors: Mr.Mao
  * @Description: 
  * @傻瓜都能写出计算机能理解的程序。优秀的程序员写出的是人类能读懂的代码。
  */
@@ -13,8 +13,8 @@ import fs = require('fs');
 import path = require('path');
 export default async function createUniAppView(options: EcreateUniAppView) {
   const {
-    create_path, view_name, component, typescript,
-    style_type, subcontract, directory
+    create_path, view_name, page_name, component,
+    typescript, style_type, subcontract, directory
   } = options;
 
   // 判断路径是否存在 / 符合创建环境
@@ -56,7 +56,7 @@ export default async function createUniAppView(options: EcreateUniAppView) {
   if (!subcontract) {
     pagesInfo.pages.push({
       path: `${srcPagePath}/${basePagePath}`,
-      style: { navigationBarTitleText: view_name }
+      style: { navigationBarTitleText: page_name || view_name }
     });
   }
   // 如果是分包页面
@@ -67,7 +67,7 @@ export default async function createUniAppView(options: EcreateUniAppView) {
     });
     const pushPageInfo = {
       path: basePagePath,
-      style: { navigationBarTitleText: view_name }
+      style: { navigationBarTitleText: page_name || view_name }
     };
     if (!findRootItem) {
       pagesInfo.subPackages.push({

@@ -10,6 +10,7 @@ interface CreateViewV2TemplateOptions {
 interface EcreateUniAppView {
   create_path: string
   view_name: string
+  page_name?: string
   subcontract?: boolean
   component?: boolean
   directory?: boolean | unknown

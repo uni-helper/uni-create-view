@@ -31,6 +31,8 @@ github：[https://github.com/TuiMao233/create-uniapp-view](https://github.com/Tu
 ![](https://qie-online-sale-qiniu.wsandos.com/1dddw1334.gif)
 
 ## 更新日志
+- 1.3.5
+  - 新增输入页面名称使用空格分割输入内容时, 左侧为页面文件名称, 右侧为"navigationBarTitleText"名称
 - 1.3.4
   - 修复右键后无反应 bug
 - 1.3.2

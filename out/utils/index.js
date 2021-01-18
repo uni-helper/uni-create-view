@@ -13,8 +13,8 @@ exports.getCommandExt = exports.recursionGetFile = exports.logger = void 0;
 /*
  * @Author: 毛先生
  * @Date: 2020-08-04 11:05:06
- * @LastEditTime: 2020-08-04 16:51:38
- * @LastEditors: 毛先生
+ * @LastEditTime: 2021-01-18 19:21:21
+ * @LastEditors: Mr.Mao
  * @Description:
  * @傻瓜都能写出计算机能理解的程序。优秀的程序员写出的是人类能读懂的代码。
  */
@@ -79,7 +79,11 @@ exports.getCommandExt = (options) => {
         const typescript = vscode.workspace.getConfiguration().get('create-uniapp-view.typescript');
         const style_type = vscode.workspace.getConfiguration().get('create-uniapp-view.style');
         const directory = vscode.workspace.getConfiguration().get('create-uniapp-view.directory');
-        const status = yield create_view_directory_1.default(Object.assign(Object.assign({}, (options.options || {})), { create_path: uri.fsPath, view_name: inputValue, typescript, style_type,
+        const view_name = inputValue.split(' ')[0];
+        const page_name = inputValue.split(' ')[1] || '';
+        const status = yield create_view_directory_1.default(Object.assign(Object.assign({}, (options.options || {})), { create_path: uri.fsPath, view_name,
+            page_name,
+            typescript, style_type,
             directory }));
         exports.logger(status.type, status.msg);
     }));
