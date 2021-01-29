@@ -1,9 +1,10 @@
+import { kebabCase } from "lodash";
 import { componentTemplate, pagesTemplate } from "./templates";
+
 /** 创建视图函数，用于创建对应配置的视图文件内容 */
 export function createV2ViewTemplate(options: CreateViewV2TemplateOptions) {
+  const view_name = kebabCase(options.view_name);
   const style_type = options?.style_type !== 'css' ? ` lang="${options.style_type}"` : '';
-  const strike = options.view_name.replace(/([A-Z])/g, "-$1").toLocaleLowerCase();
-  const view_name = strike.indexOf("-") === 0 ? strike.slice(1) : strike;
   const script_tyle = options.typescript ? ' lang="ts"' : '';
   const import_vue = options.typescript ? `import Vue from 'vue';` : '';
   const default_vue_extend_start = options.typescript ? 'Vue.extend(' : '';
