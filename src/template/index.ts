@@ -1,25 +1,55 @@
+/*
+ * @Author: Mr.Mao
+ * @Date: 2021-03-21 21:09:39
+ * @LastEditTime: 2021-03-21 22:23:36
+ * @Description: 
+ * @LastEditors: Mr.Mao
+ * @autograph: 任何一个傻子都能写出让电脑能懂的代码，而只有好的程序员可以写出让人能看懂的代码
+ */
 import { componentTemplate, pagesTemplate } from "./templates";
 /** 创建视图函数，用于创建对应配置的视图文件内容 */
 export function createV2ViewTemplate(options: CreateViewV2TemplateOptions) {
-  const style_type = options?.style_type !== 'css' ? ` lang="${options.style_type}"` : '';
-  const strike = options.view_name.replace(/([A-Z])/g, "-$1").toLocaleLowerCase();
-  const view_name = strike.indexOf("-") === 0 ? strike.slice(1) : strike;
-  const script_tyle = options.typescript ? ' lang="ts"' : '';
-  const import_vue = options.typescript ? `import Vue from 'vue';` : '';
-  const default_vue_extend_start = options.typescript ? 'Vue.extend(' : '';
-  const default_vue_extend_end = options.typescript ? ')' : '';
-  const template = options.component ? componentTemplate : pagesTemplate;
+  const strike = options.viewName.replace(/([A-Z])/g, "-$1").toLocaleLowerCase();
+  let templateInfo = {
+    styleType: options?.styleType !== 'css' ? ` lang="${options.styleType}"` : '',
+    viewName: strike.indexOf("-") === 0 ? strike.slice(1) : strike,
+    importText: '',
+    scriptType: '',
+    templateText: options.component ? componentTemplate : pagesTemplate,
+    defaultStart: '',
+    defaultEnd: '',
+  };
+  const typeScriptInfo = {
+    importText: `import Vue from 'vue';`,
+    scriptType: ' lang="ts"',
+    defaultStart: 'Vue.extend(',
+    defaultEnd: ')'
+  };
+  const compositionApiInfo = {
+    importText: `import { defineComponent } from '@vue/composition-api';`,
+    defaultStart: 'defineComponent(',
+    templateText: `setup: () => { 
+    
+  }`,
+    defaultEnd: ')'
+  };
+  if (options.typescript) {
+    templateInfo = { ...templateInfo, ...typeScriptInfo };
+  }
+  if (options.compositionApi) {
+    templateInfo = { ...templateInfo, ...compositionApiInfo };
+  }
   return `<template>
-  <div class="${view_name}">${view_name}</div>
+  <div class="${templateInfo.viewName}">${templateInfo.viewName}</div>
 </template>
 
-<script${script_tyle}>
-${import_vue}
-export default ${default_vue_extend_start}{
-  ${template}
-}${default_vue_extend_end};
+<script${templateInfo.scriptType}>
+${templateInfo.importText}
+export default ${templateInfo.defaultStart}{
+  ${templateInfo.templateText}
+}${templateInfo.defaultEnd};
 </script>
 
-<style${style_type}></style>
+<style${templateInfo.styleType}></style>
 `;
 }

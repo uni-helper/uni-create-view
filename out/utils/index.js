@@ -13,7 +13,7 @@ exports.getCommandExt = exports.recursionGetFile = exports.logger = void 0;
 /*
  * @Author: 毛先生
  * @Date: 2020-08-04 11:05:06
- * @LastEditTime: 2021-01-18 19:21:21
+ * @LastEditTime: 2021-03-21 22:23:57
  * @LastEditors: Mr.Mao
  * @Description:
  * @傻瓜都能写出计算机能理解的程序。优秀的程序员写出的是人类能读懂的代码。
@@ -68,7 +68,7 @@ exports.recursionGetFile = (current_path, file_name) => {
         recursion(current_path);
     });
 };
-/** 命令基本流程: 拿到路径`uri` -> 组件名称`view_name` -> 创建页面`createUniAppView` */
+/** 命令基本流程: 拿到路径`uri` -> 组件名称`viewName` -> 创建页面`createUniAppView` */
 exports.getCommandExt = (options) => {
     return vscode.commands.registerCommand(options.extname, (uri) => __awaiter(void 0, void 0, void 0, function* () {
         const inputValue = yield vscode.window.showInputBox({ prompt: `输入${options.tipsViewNmae}名称` });
@@ -77,13 +77,16 @@ exports.getCommandExt = (options) => {
             throw new Error(`${options.tipsViewNmae}名称不能为空!`);
         }
         const typescript = vscode.workspace.getConfiguration().get('create-uniapp-view.typescript');
-        const style_type = vscode.workspace.getConfiguration().get('create-uniapp-view.style');
+        const styleType = vscode.workspace.getConfiguration().get('create-uniapp-view.style');
         const directory = vscode.workspace.getConfiguration().get('create-uniapp-view.directory');
-        const view_name = inputValue.split(' ')[0];
-        const page_name = inputValue.split(' ')[1] || '';
-        const status = yield create_view_directory_1.default(Object.assign(Object.assign({}, (options.options || {})), { create_path: uri.fsPath, view_name,
-            page_name,
-            typescript, style_type,
+        const compositionApi = vscode.workspace.getConfiguration().get('create-uniapp-view.compositionApi');
+        const viewName = inputValue.split(' ')[0];
+        const pageName = inputValue.split(' ')[1] || '';
+        const status = yield create_view_directory_1.default(Object.assign(Object.assign({}, (options.options || {})), { create_path: uri.fsPath, viewName,
+            pageName,
+            typescript,
+            styleType,
+            compositionApi,
             directory }));
         exports.logger(status.type, status.msg);
     }));
