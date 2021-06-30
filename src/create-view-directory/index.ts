@@ -1,7 +1,7 @@
 /*
  * @Author: 毛先生
  * @Date: 2020-08-04 11:06:12
- * @LastEditTime: 2021-01-18 19:22:44
+ * @LastEditTime: 2021-03-21 22:25:11
  * @LastEditors: Mr.Mao
  * @Description: 
  * @傻瓜都能写出计算机能理解的程序。优秀的程序员写出的是人类能读懂的代码。
@@ -13,21 +13,22 @@ import fs = require('fs');
 import path = require('path');
 export default async function createUniAppView(options: EcreateUniAppView) {
   const {
-    create_path, view_name, page_name, component,
-    typescript, style_type, subcontract, directory
+    create_path, viewName, pageName, component,
+    typescript, styleType, subcontract, directory,
+    compositionApi
   } = options;
 
   // 判断路径是否存在 / 符合创建环境
   try { fs.lstatSync(create_path); }
   catch { return { type: 'error', msg: '创建错误, 该路径不是文件夹' }; }
-  try { directory && fs.mkdirSync(path.resolve(create_path, view_name)); }
+  try { directory && fs.mkdirSync(path.resolve(create_path, viewName)); }
   catch (error) { return { type: 'error', msg: '创建错误, 该文件夹已存在!' }; }
 
   // 获取当前创建页面基本路径
-  const basePagePath = directory ? `${view_name}/${view_name}` : view_name;
+  const basePagePath = directory ? `${viewName}/${viewName}` : viewName;
   fs.writeFile(
     path.resolve(create_path, `${basePagePath}.vue`),
-    createV2ViewTemplate({ view_name, typescript, style_type, component }),
+    createV2ViewTemplate({ viewName, typescript, styleType, component, compositionApi }),
     { flag: "w" }, () => { }
   );
 
@@ -56,7 +57,7 @@ export default async function createUniAppView(options: EcreateUniAppView) {
   if (!subcontract) {
     pagesInfo.pages.push({
       path: `${srcPagePath}/${basePagePath}`,
-      style: { navigationBarTitleText: page_name || view_name }
+      style: { navigationBarTitleText: pageName || viewName }
     });
   }
   // 如果是分包页面
@@ -67,7 +68,7 @@ export default async function createUniAppView(options: EcreateUniAppView) {
     });
     const pushPageInfo = {
       path: basePagePath,
-      style: { navigationBarTitleText: page_name || view_name }
+      style: { navigationBarTitleText: pageName || viewName }
     };
     if (!findRootItem) {
       pagesInfo.subPackages.push({

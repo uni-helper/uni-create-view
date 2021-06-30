@@ -1,7 +1,7 @@
 /*
  * @Author: 毛先生
  * @Date: 2020-08-04 11:05:06
- * @LastEditTime: 2021-01-18 19:21:21
+ * @LastEditTime: 2021-03-21 22:23:57
  * @LastEditors: Mr.Mao
  * @Description: 
  * @傻瓜都能写出计算机能理解的程序。优秀的程序员写出的是人类能读懂的代码。
@@ -28,20 +28,20 @@ export const recursionGetFile = (current_path: string, file_name: string): ERecu
     function recursion(app_path: string) {
       const recurs_path = path.resolve(app_path, file_name);
       // 递归出口: 路径是根路径, 停止递归
-      if (recurs_path.length === (3 + file_name.length)) {return false;}
+      if (recurs_path.length === (3 + file_name.length)) { return false; }
       // 文件是否存在
       fs.access(recurs_path, function (error: any) {
         if (!error) {
           // 递归出口: 文件存在, 返回文件信息
           const stat = fs.lstatSync(recurs_path);
-          if (stat.isFile()){
+          if (stat.isFile()) {
             fs.readFile(recurs_path, (error, data) => {
-              if (error) {return resolve(null);}
+              if (error) { return resolve(null); }
               resolve({ path: recurs_path, data: data.toString() });
             });
           }
-          if (stat.isDirectory()){
-            resolve({path: current_path, data: ''});
+          if (stat.isDirectory()) {
+            resolve({ path: current_path, data: '' });
           }
           // 递归点: 当该文件不存在, 往上一级目录总
         } else { recursion(path.resolve(app_path, '../')); }
@@ -50,7 +50,7 @@ export const recursionGetFile = (current_path: string, file_name: string): ERecu
     recursion(current_path);
   });
 };
-/** 命令基本流程: 拿到路径`uri` -> 组件名称`view_name` -> 创建页面`createUniAppView` */
+/** 命令基本流程: 拿到路径`uri` -> 组件名称`viewName` -> 创建页面`createUniAppView` */
 export const getCommandExt = (options: GetCommandExtOpts) => {
   return vscode.commands.registerCommand(options.extname, async uri => {
     const inputValue = await vscode.window.showInputBox({ prompt: `输入${options.tipsViewNmae}名称` });
@@ -59,16 +59,19 @@ export const getCommandExt = (options: GetCommandExtOpts) => {
       throw new Error(`${options.tipsViewNmae}名称不能为空!`);
     }
     const typescript = vscode.workspace.getConfiguration().get('create-uniapp-view.typescript');
-    const style_type = vscode.workspace.getConfiguration().get('create-uniapp-view.style');
+    const styleType = vscode.workspace.getConfiguration().get('create-uniapp-view.style');
     const directory = vscode.workspace.getConfiguration().get('create-uniapp-view.directory');
-    const view_name = inputValue.split(' ')[0];
-    const page_name = inputValue.split(' ')[1] || '';
+    const compositionApi = vscode.workspace.getConfiguration().get('create-uniapp-view.compositionApi');
+    const viewName = inputValue.split(' ')[0];
+    const pageName = inputValue.split(' ')[1] || '';
     const status = await createUniAppView({
       ...(options.options || {}),
       create_path: uri.fsPath,
-      view_name,
-      page_name,
-      typescript, style_type,
+      viewName,
+      pageName,
+      typescript,
+      styleType,
+      compositionApi,
       directory
     });
     logger(status.type, status.msg);

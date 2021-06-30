@@ -7,6 +7,7 @@
 - 创建分包页面, 自动查找路径并添加到 `pages.json -> subPackages` 中
 - 支持深度目录创建, 自动查找`src`目录下路径
 - 写入`pages.json`后依然保留注释
+- 支持 composition-api 创建，如使用 composition-api 建议使用 [uni-composition-api](https://github.com/TuiMao233/uni-composition-api)。
 
 vscode：[https://marketplace.visualstudio.com/items?itemName=mrmaoddxxaa.create-uniapp-view](https://marketplace.visualstudio.com/items?itemName=mrmaoddxxaa.create-uniapp-view)
 
@@ -31,6 +32,9 @@ github：[https://github.com/TuiMao233/create-uniapp-view](https://github.com/Tu
 ![](https://qie-online-sale-qiniu.wsandos.com/1dddw1334.gif)
 
 ## 更新日志
+- 1.3.6
+  - 新增 composition-api 选项
+  - 优化模板判断逻辑
 - 1.3.5
   - 新增输入页面名称使用空格分割输入内容时, 左侧为页面文件名称, 右侧为"navigationBarTitleText"名称
 - 1.3.4

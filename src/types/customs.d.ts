@@ -1,21 +1,23 @@
 type ERecurs = Promise<null | { path: string, data: string }>;
 
 interface CreateViewV2TemplateOptions {
-  view_name: string,
-  typescript?: boolean | unknown,
-  style_type?: string | unknown,
+  viewName: string
+  typescript?: boolean | unknown
+  styleType?: string | unknown
   component?: boolean
+  compositionApi?: boolean | unknown
 }
 
 interface EcreateUniAppView {
   create_path: string
-  view_name: string
-  page_name?: string
+  viewName: string
+  pageName?: string
   subcontract?: boolean
   component?: boolean
   directory?: boolean | unknown
   typescript?: boolean | unknown
-  style_type?: string | unknown
+  styleType?: string | unknown
+  compositionApi?: boolean | unknown
 }
 
 interface GetCommandExtOpts {
