@@ -9,9 +9,11 @@
 - 支持深度目录创建, 自动查找根目录下路径，写入 `pages.json` 中
 - 写入`pages.json`后依然保留注释
 
-vscode：[https://marketplace.visualstudio.com/items?itemName=mrmaoddxxaa.create-uniapp-view](https://marketplace.visualstudio.com/items?itemName=mrmaoddxxaa.create-uniapp-view)
+VsCode：[mrmaoddxxaa/create-uniapp-view](https://marketplace.visualstudio.com/items?itemName=mrmaoddxxaa.create-uniapp-view)
 
-github：[https://github.com/TuiMao233/create-uniapp-view](https://github.com/TuiMao233/create-uniapp-view)
+Github：[TuiMao233/create-uniapp-view](https://github.com/TuiMao233/create-uniapp-view)
+
+MyBlog: [tuimao233/gitee](https://tuimao233.gitee.io/mao-blog/ruan-jian-kai-fa/qian-duan-bi-ji/01-html-chao-wen-ben-biao-ji-yu-yan.html)
 
 ### 基本使用（创建 page | component ）
 
