@@ -3,6 +3,7 @@ node_modules/
 unpackage/
 dist/
 test/
+out
 
 # local env files
 .env.local
