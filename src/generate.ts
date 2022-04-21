@@ -90,7 +90,7 @@ export const writePagesJson = async (options: GenerateOptions) => {
 
   // 读取 pages.json, 准备 page 信息
   const pagesJson = JSONC.parse(pagesJsonFile.data) as Record<string, any>;
-  const page = { path: filePath, style: {navigationBarTitleText: names.page || names.view} };
+  const page = { path: filePath, style: { navigationBarTitleText: names.page || names.view } };
 
   // 如果是分包页面
   if (options.subcontract) {

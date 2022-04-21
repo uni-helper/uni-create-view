@@ -15,7 +15,9 @@ export interface CreateCommandOptions {
 
 export const createCommand = (options: CreateCommandOptions) => {
   return vscode.commands.registerCommand(options.command, async uri => {
-    const input = await vscode.window.showInputBox({ prompt: `输入${options.name}名称` });
+    const componentText = `输入${options.name}名称`;
+    const pageText = `${componentText}，空格分隔字段（navigationBarTitleText）`;
+    const input = await vscode.window.showInputBox({ prompt: options.name === '页面' ? pageText :componentText  });
   
     if (!input) {
       logger("error", `${options.name}名称不能为空!`);
