@@ -27,17 +27,20 @@ export const createViewTemplate = (options: CreateViewTemplateOptions) => {
   const templates = options.vue3 ? ALL_TEMPLATES['v3'] : ALL_TEMPLATES['v2'];
   const template = templates[options.component ? 'component' : 'page'];
 
-  const scriptAttrValue = [options.typescript && `lang="ts"`, options.vue3 && options.setup && 'setup']
-    .filter(Boolean)
-    .join(' ')
-    .trim();
-  const scriptAttrs = scriptAttrValue ? ' ' + scriptAttrValue : '';
+  const handle = (array: any[]) => {
+    const _v = array.filter(Boolean).join(' ').trim();
+    return _v ? ' ' + _v : '';
+  };
 
-  const styleAttrValue = [options.styleType !== 'css' && `lang="${options.styleType}"`, options.scoped && 'scoped']
-    .filter(Boolean)
-    .join(' ')
-    .trim();
-  const styleAttrs = styleAttrValue ? ' ' + styleAttrValue : '';
+  const scriptAttrs = handle([
+    options.typescript && `lang="ts"`,
+    options.vue3 && options.setup && 'setup'
+  ]);
+
+  const styleAttrs = handle([
+    options.styleType !== 'css' && `lang="${options.styleType}"`,
+    options.scoped && 'scoped'
+  ]);
 
   const data = {
     name: options.name,

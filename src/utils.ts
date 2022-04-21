@@ -37,7 +37,7 @@ type SearchFileResult = Promise<{ path: string, data: string } | null | undefine
 
 export const upwardSearchFile = (currentPath: string, fileName: string): SearchFileResult=> {
   const recursion = async (appPath: string): Promise<any> => {
-    const recursPath = path.resolve(appPath, fileName).replace('\\', '/');
+    const recursPath = fixPath(path.resolve(appPath, fileName));
     // 递归出口: 路径是根路径, 停止递归
     if (recursPath.split('/').length < 1) { return null; }
 
@@ -53,3 +53,5 @@ export const upwardSearchFile = (currentPath: string, fileName: string): SearchF
 
   return recursion(currentPath);
 };
+
+export const fixPath = (path: string) => path.replace(/\\\\/g, '/').replace(/\\/g, '/');

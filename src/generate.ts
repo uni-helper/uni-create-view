@@ -1,7 +1,7 @@
 import * as fs from 'fs-extra';
 import * as JSONC from "comment-json";
 import { createViewTemplate } from './template';
-import { isDirectory, upwardSearchFile } from './utils';
+import { fixPath, isDirectory, upwardSearchFile } from './utils';
 import path = require('path');
 
 export interface GenerateOptions {
@@ -75,21 +75,20 @@ export const generate = async (options: GenerateOptions): Promise<GenerateResult
  * @param options 
  */
 export const writePagesJson = async (options: GenerateOptions) => {
-  const { names } = options;
-  const isIndex = options.nameType === 'index';
+  const names = options.names;
+  options.path = fixPath(options.path);
+
   const pagesJsonFile = await upwardSearchFile(options.path, 'pages.json');
-  const pagesDirFile = await upwardSearchFile(options.path, 'pages');
-
   if (!pagesJsonFile) { return { status: 'warning', message: '创建页面成功! 但pages.json未找到' }; };
-  if (!pagesDirFile) { return { status: 'warning', message: '创建页面成功! 但pages目录未找到' }; };
-
 
   // 获取基于项目目录下的 pages 文件和根目录
-  const pagesSplit = options.path.split('pages');
+  const pagesSplit = pagesJsonFile.path.split('pages.json');
 
+  const isIndex = options.nameType === 'index';
   const rootPath = options.path.replace(pagesSplit[0], '');
   const filePath = options.directory ? `${names.view}/${isIndex ? 'index' : names.view}` : `${names.view}`;
 
+  // 读取 pages.json, 准备 page 信息
   const pagesJson = JSONC.parse(pagesJsonFile.data) as Record<string, any>;
   const page = { path: filePath, style: {navigationBarTitleText: names.page || names.view} };
 
@@ -102,7 +101,7 @@ export const writePagesJson = async (options: GenerateOptions) => {
     if (!findRoot) {pagesJson.subPackages.unshift(root);};
   } else {
     pagesJson.pages = pagesJson.pages || [];
-    page.path = path.join(rootPath, page.path);
+    page.path = fixPath(path.join(rootPath, page.path));
     pagesJson.pages.unshift(page);
   }
 
