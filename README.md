@@ -2,12 +2,12 @@
 
 右键目录文件夹快速创建`univue-view,` 创建视图页面时将自动添加`pages.json`中!
 
-- 可修改配置, 支持配置`css`预编辑器与是否开启`typescript`模板, 以及是否为单文件模式
+- 支持 vue3 组件与页面的创建，支持 setup 语法
+- 定制化强, 支持配置`css`预编辑器与是否开启`typescript`模板, 以及是否为单文件模式
 - 创建页面, 自动查找路径并添加到 `pages.json -> pages` 中
 - 创建分包页面, 自动查找路径并添加到 `pages.json -> subPackages` 中
-- 支持深度目录创建, 自动查找`src`目录下路径
+- 支持深度目录创建, 自动查找根目录下路径，写入 `pages.json` 中
 - 写入`pages.json`后依然保留注释
-- 支持 composition-api 创建，如使用 composition-api 建议使用 [uni-composition-api](https://github.com/TuiMao233/uni-composition-api)。
 
 vscode：[https://marketplace.visualstudio.com/items?itemName=mrmaoddxxaa.create-uniapp-view](https://marketplace.visualstudio.com/items?itemName=mrmaoddxxaa.create-uniapp-view)
 
@@ -32,6 +32,17 @@ github：[https://github.com/TuiMao233/create-uniapp-view](https://github.com/Tu
 ![](https://qie-online-sale-qiniu.wsandos.com/1dddw1334.gif)
 
 ## 更新日志
+- 2.0.1
+  - 新增文档内容
+- 2.0.0
+  - 支持组件页面 style scoped 选项
+  - 重构主逻辑
+  - 修复无法写入 pages.json
+  - 支持 setup 语法
+  - 支持 vue3 模版
+  - 支持自定义名称 index 或者使用文件夹名称
+  - 模版逻辑优化，使用 ejs 实现
+  - 优化查询上层文件逻辑
 - 1.3.6
   - 新增 composition-api 选项
   - 优化模板判断逻辑
