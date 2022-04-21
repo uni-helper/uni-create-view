@@ -8,11 +8,11 @@ const template = `\
   const props = defineProps();
 <% } -%>
 <% if (!options.setup) { -%>
-  import { defineComponent } from 'vue'
-  export default defineComponent({
-    props: {},
-    setup: () => {}
-  })
+import { defineComponent } from 'vue'
+export default defineComponent({
+  props: {},
+  setup: () => {}
+})
 <% } -%>
 </script>
 

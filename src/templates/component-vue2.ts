@@ -25,11 +25,11 @@ const template = `\
 </template>
 
 <script<%- options.scriptAttrs %>>
-<% if (options.typescript) { %>
-  <%_ \`import Vue from 'vue';\` %> 
-  <%_ \`export default Vue.extend({\` %> 
+<% if (options.typescript) { -%>
+import Vue from 'vue';
+export default Vue.extend({
 <% } else { -%>
-  <%_ \`export default {\` %> 
+export default {
 <% } -%>
 ${content}
 <% options.typescript ? '})' : '}' %> 

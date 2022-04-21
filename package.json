@@ -1,10 +1,12 @@
 {
   "name": "create-uniapp-view",
-  "displayName": "create-uniapp-view",
+  "displayName": "uni-create-view（Create Uniapp View）",
   "keywords": [
     "uniapp",
     "page",
-    "components"
+    "components",
+    "uni-app",
+    "uni"
   ],
   "publisher": "mrmaoddxxaa",
   "description": "快速创建uniapp视图与组件!",

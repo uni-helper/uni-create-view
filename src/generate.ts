@@ -97,12 +97,12 @@ export const writePagesJson = async (options: GenerateOptions) => {
     pagesJson.subPackages = pagesJson.subPackages || [];
     const findRoot = pagesJson.subPackages.find((v: any) => v.root === rootPath);
     const root = findRoot || { root: rootPath, pages: [] };
-    root.pages.unshift(page);
-    if (!findRoot) {pagesJson.subPackages.unshift(root);};
+    root.pages.push(page);
+    if (!findRoot) {pagesJson.subPackages.push(root);};
   } else {
     pagesJson.pages = pagesJson.pages || [];
     page.path = fixPath(path.join(rootPath, page.path));
-    pagesJson.pages.unshift(page);
+    pagesJson.pages.push(page);
   }
 
   const newPagesJson = JSONC.stringify(pagesJson, null, "\t");

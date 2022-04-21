@@ -32,6 +32,8 @@ github：[https://github.com/TuiMao233/create-uniapp-view](https://github.com/Tu
 ![](https://qie-online-sale-qiniu.wsandos.com/1dddw1334.gif)
 
 ## 更新日志
+- 2.0.2
+  - 修复 window 环境下路径 '\\' 问题
 - 2.0.1
   - 新增文档内容
 - 2.0.0
