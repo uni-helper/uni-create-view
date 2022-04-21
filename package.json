@@ -9,6 +9,7 @@
   "publisher": "mrmaoddxxaa",
   "description": "快速创建uniapp视图与组件!",
   "version": "1.3.5",
+  "prettier": "@hairy/eslint/prettier.js",
   "engines": {
     "vscode": "^1.47.0"
   },
@@ -23,7 +24,7 @@
   "main": "./out/extension.js",
   "contributes": {
     "configuration": {
-      "title": "create-uniapp-view-options",
+      "title": "create-uniapp-view 创建 page|component 时的配置项",
       "properties": {
         "create-uniapp-view.typescript": {
           "type": "boolean",
@@ -34,6 +35,17 @@
           "type": "boolean",
           "default": true,
           "description": "创建视图时是否创建同名文件夹"
+        },
+        "create-uniapp-view.name": {
+          "type": [
+            "string"
+          ],
+          "default": "index",
+          "enum": [
+            "index",
+            "与文件夹同名"
+          ],
+          "description": "同名文件夹中生成的文件名"
         },
         "create-uniapp-view.style": {
           "type": [
@@ -48,6 +60,27 @@
             "sass"
           ],
           "description": "创建视图时 CSS 预处理器的类型"
+        },
+        "create-uniapp-view.scoped": {
+          "type": "boolean",
+          "default": true,
+          "description": "创建模版时，是否使用 <style scoped>"
+        },
+        "create-uniapp-view.setup": {
+          "type": "boolean",
+          "default": true,
+          "description": "创建 vue3 模版时，是否使用 <script setup>"
+        },
+        "create-uniapp-view.template": {
+          "type": [
+            "string"
+          ],
+          "default": "vue2",
+          "enum": [
+            "vue2",
+            "vue3"
+          ],
+          "description": "选择创建的模版"
         }
       }
     },
@@ -98,10 +131,16 @@
     "test": "node ./out/test/runTest.js"
   },
   "dependencies": {
-    "comment-json": "^4.1.0",
+    "@types/ejs": "^3.1.0",
+    "comment-json": "^4.2.2",
+    "ejs": "^3.1.7",
+    "fs-extra": "^10.0.0",
+    "glob": "^7.1.6",
     "lodash": "^4.17.20"
   },
   "devDependencies": {
+    "@hairy/eslint": "^1.0.14",
+    "@types/fs-extra": "^9.0.12",
     "@types/glob": "^7.1.1",
     "@types/lodash": "^4.14.168",
     "@types/mocha": "^7.0.2",
@@ -110,7 +149,6 @@
     "@typescript-eslint/eslint-plugin": "^2.30.0",
     "@typescript-eslint/parser": "^2.30.0",
     "eslint": "^6.8.0",
-    "glob": "^7.1.6",
     "mocha": "^7.1.2",
     "typescript": "^3.8.3",
     "vscode-test": "^1.3.0"

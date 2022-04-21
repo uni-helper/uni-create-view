@@ -1,29 +1,25 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deactivate = exports.activate = void 0;
-const utils_1 = require("./utils");
+const command_1 = require("./command");
 function activate(context) {
-    /** 声明创建页面命令 */
-    const createPageExt = utils_1.getCommandExt({
-        tipsViewNmae: '页面',
-        extname: 'create-uniapp-view.createPage'
-    });
-    /** 声明创建分包页面目录 */
-    const createSubcontractPage = utils_1.getCommandExt({
-        tipsViewNmae: '页面',
-        options: { subcontract: true },
-        extname: 'create-uniapp-view.createSubcontractPage'
-    });
-    /** 声明创建组件命令 */
-    const createComponentsExt = utils_1.getCommandExt({
-        tipsViewNmae: '组件',
-        options: { component: true },
-        extname: 'create-uniapp-view.createComponent'
-    });
-    /** 进行添加命令 */
-    context.subscriptions.push(createPageExt);
-    context.subscriptions.push(createSubcontractPage);
-    context.subscriptions.push(createComponentsExt);
+    const subscriptions = [
+        command_1.createCommand({
+            name: '页面',
+            command: 'create-uniapp-view.createPage'
+        }),
+        command_1.createCommand({
+            name: '页面',
+            options: { subcontract: true },
+            command: 'create-uniapp-view.createSubcontractPage'
+        }),
+        command_1.createCommand({
+            name: '组件',
+            options: { component: true },
+            command: 'create-uniapp-view.createComponent'
+        })
+    ];
+    context.subscriptions.push(...subscriptions);
 }
 exports.activate = activate;
 // 停用您的扩展程序时调用此方法
