@@ -1,13 +1,13 @@
 ## create-uniapp-view 简述
 
-右键目录文件夹快速创建`univue-view,` 创建视图页面时将自动添加`pages.json`中!
+右键目录文件夹快速创建页面与组建，创建视图页面时将自动添加 `pages.json` 中!
 
-- 支持 vue3 组件与页面的创建，支持 setup 语法
-- 定制化强, 支持配置`css`预编辑器与是否开启`typescript`模板, 以及是否为单文件模式
+- 支持 `vue2` 、`vue3`、`composition-api(vue2)` 组件与页面的创建，`vue3` 模版支持 `script setup` 语法
+- 定制化强, 支持配置 `css` 预编辑器类型与是否开启 `typescript` 模板, 以及是否为单文件模式
 - 创建页面, 自动查找路径并添加到 `pages.json -> pages` 中
 - 创建分包页面, 自动查找路径并添加到 `pages.json -> subPackages` 中
-- 支持深度目录创建, 自动查找根目录下路径，写入 `pages.json` 中
-- 写入`pages.json`后依然保留注释
+- 支持深度目录创建, 自动查找根目录下路径
+- 写入 `pages.json` 后依然保留注释
 
 VsCode：[mrmaoddxxaa/create-uniapp-view](https://marketplace.visualstudio.com/items?itemName=mrmaoddxxaa.create-uniapp-view)
 
@@ -34,8 +34,10 @@ MyBlog: [tuimao233/gitee](https://tuimao233.gitee.io/mao-blog/ruan-jian-kai-fa/q
 ![](https://qie-online-sale-qiniu.wsandos.com/1dddw1334.gif)
 
 ## 更新日志
+- 2.0.4
+  - 保留支持 `composition-api(vue2)`，文档优化
 - 2.0.2
-  - 修复 window 环境下路径 '\\' 问题
+  - 修复 window 环境下路径 `\\` 问题
 - 2.0.1
   - 新增文档内容
 - 2.0.0

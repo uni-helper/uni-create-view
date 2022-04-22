@@ -24,7 +24,7 @@ export interface GenerateOptions {
   typescript?: boolean
   styleType?: string
   component?: boolean
-  vue3?: boolean
+  template?: string
   setup?: string
   scoped?: boolean
   subcontract?: boolean

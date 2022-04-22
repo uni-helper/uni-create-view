@@ -32,7 +32,7 @@ export const createCommand = (options: CreateCommandOptions) => {
       typescript: getConfiguration('create-uniapp-view.typescript'),
       styleType: getConfiguration('create-uniapp-view.style'),
       directory: getConfiguration('create-uniapp-view.directory'),
-      vue3: getConfiguration('create-uniapp-view.template') === 'vue3',
+      template: getConfiguration('create-uniapp-view.template'),
       setup: getConfiguration('create-uniapp-view.setup'),
       scoped: getConfiguration('create-uniapp-view.scoped'),
     });

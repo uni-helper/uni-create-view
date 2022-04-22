@@ -3,18 +3,21 @@ import cv2 from './templates/component-vue2';
 import cv3 from './templates/component-vue3';
 import pv2 from './templates/page-vue2';
 import pv3 from './templates/page-vue3';
+import pv2c from './templates/page-composition';
+import cv2c from './templates/component-composition';
 
 const ALL_TEMPLATES = {
-  v2: { page: pv2, component: cv2 },
-  v3: { page: pv3, component: cv3 }
+  ['vue2' as string]: { page: pv2, component: cv2 },
+  ['vue3' as string]: { page: pv3, component: cv3 },
+  ['composition-api(vue2)' as string]: { page: pv2c, component: cv2c }
 };
 
 export interface CreateViewTemplateOptions {
+  template?: string
   name?: string
   typescript?: boolean
   styleType?: string
   component?: boolean
-  vue3?: boolean
   setup?: string
   scoped?: boolean
 }
@@ -24,7 +27,8 @@ export interface CreateViewTemplateOptions {
  * @param options 
  */
 export const createViewTemplate = (options: CreateViewTemplateOptions) => {
-  const templates = options.vue3 ? ALL_TEMPLATES['v3'] : ALL_TEMPLATES['v2'];
+  
+  const templates = ALL_TEMPLATES[options.template || 'vue2'];
   const template = templates[options.component ? 'component' : 'page'];
 
   const handle = (array: any[]) => {
@@ -34,7 +38,7 @@ export const createViewTemplate = (options: CreateViewTemplateOptions) => {
 
   const scriptAttrs = handle([
     options.typescript && `lang="ts"`,
-    options.vue3 && options.setup && 'setup'
+    options.template === 'vue3' && options.setup && 'setup'
   ]);
 
   const styleAttrs = handle([
