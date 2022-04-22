@@ -2,12 +2,14 @@
 
 右键目录文件夹快速创建页面与组建，创建视图页面时将自动添加 `pages.json` 中!
 
-- 支持 `vue2` 、`vue3`、`composition-api(vue2)` 组件与页面的创建，`vue3` 模版支持 `script setup` 语法
+- 支持 `vue2` 、`vue3`、`composition-api(vue2)`、`script setup` 组件与页面模版
+- 使用 `composition-api(vue2)` 模版建议配合 [uni-composition-api](https://github.com/TuiMao233/uni-composition-api) 使用
 - 定制化强, 支持配置 `css` 预编辑器类型与是否开启 `typescript` 模板, 以及是否为单文件模式
 - 创建页面, 自动查找路径并添加到 `pages.json -> pages` 中
 - 创建分包页面, 自动查找路径并添加到 `pages.json -> subPackages` 中
-- 支持深度目录创建, 自动查找根目录下路径
-- 写入 `pages.json` 后依然保留注释
+- 支持深度目录创建, 自动查找根目录下路径，写入 `pages.json` 后依然保留注释
+
+
 
 VsCode：[mrmaoddxxaa/create-uniapp-view](https://marketplace.visualstudio.com/items?itemName=mrmaoddxxaa.create-uniapp-view)
 
