@@ -1,6 +1,10 @@
 const content = `\
+  name: "<%- options.name%>",
   components: {},
-  data: () => ({}),
+  props: {},
+  data() {
+    return {}
+  },
   computed: {},
   methods: {},
   watch: {},

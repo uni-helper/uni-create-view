@@ -1,6 +1,10 @@
+// data 不能为箭头函数, 否则 this 为 undefined
 const content = `\
+  name: "<%- options.name%>",
   props: {},
-  data: () => ({}),
+  data() {
+    return {}
+  },
   computed: {},
   methods: {},
   watch: {},
