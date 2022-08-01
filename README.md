@@ -36,6 +36,8 @@ MyBlog: [tuimao233/gitee](https://tuimao233.gitee.io/mao-blog/ruan-jian-kai-fa/q
 ![](https://qie-online-sale-qiniu.wsandos.com/1dddw1334.gif)
 
 ## 更新日志
+- 2.0.6
+  - template 模板 data 更改
 - 2.0.4
   - 保留支持 `composition-api(vue2)`，文档优化
 - 2.0.2
