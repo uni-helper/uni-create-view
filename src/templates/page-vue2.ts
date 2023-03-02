@@ -1,7 +1,5 @@
 const content = `\
-  name: "<%- options.name%>",
   components: {},
-  props: {},
   data() {
     return {}
   },
