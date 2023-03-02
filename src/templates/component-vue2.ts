@@ -36,7 +36,7 @@ export default Vue.extend({
 export default {
 <% } -%>
 ${content}
-<% options.typescript ? '})' : '}' %> 
+<%= options.typescript ? '})' : '}' %> 
 </script>
 
 <style<%- options.styleAttrs %>></style>\
