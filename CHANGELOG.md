@@ -4,6 +4,12 @@ All notable changes to the "uni-create-view" extension will be documented in thi
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
+## [2.0.8]
+- 调整项目目录、新增 .eslintrc 配置
+- 使用 pnpm 替换 yarn 工具
+- 添加 LICENSE 协议
+- 调整、优化插件默认配置
+
 ## [2.0.6]
 - 删除页面无用的属性[#13]
 - 修复错误的模板语法[#12]
