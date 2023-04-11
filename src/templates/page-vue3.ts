@@ -13,5 +13,5 @@ export default defineComponent({
 </script>
 
 <style<%- options.styleAttrs %>></style>\
-`;
-export default template;
+`
+export default template

@@ -21,7 +21,7 @@ const content = `\
   deactivated() {},
   // 组件周期函数--监听组件销毁之前
   beforeDestroy() {},\
-`;
+`
 
 const template = `\
 <template>
@@ -40,5 +40,5 @@ ${content}
 </script>
 
 <style<%- options.styleAttrs %>></style>\
-`;
-export default template;
+`
+export default template

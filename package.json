@@ -1,6 +1,17 @@
 {
+  "publisher": "mrmaoddxxaa",
   "name": "create-uniapp-view",
   "displayName": "uni-create-view",
+  "version": "2.0.7",
+  "description": "快速创建 uniapp 视图与组件!",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/uni-helper/uni-create-view",
+    "directory": "."
+  },
+  "bugs": {
+    "url": "https://github.com/uni-helper/uni-create-view"
+  },
   "keywords": [
     "uniapp",
     "page",
@@ -8,34 +19,31 @@
     "uni-app",
     "uni"
   ],
-  "publisher": "mrmaoddxxaa",
-  "description": "快速创建uniapp视图与组件!",
-  "version": "2.0.7",
   "prettier": "@hairy/eslint/prettier.js",
-  "engines": {
-    "vscode": "^1.47.0"
-  },
   "categories": [
     "Other"
   ],
-  "icon": "images/icon.png",
+  "main": "./out/extension.js",
+  "icon": "public/icon.png",
+  "engines": {
+    "vscode": "^1.47.0"
+  },
   "activationEvents": [
     "onCommand:create-uniapp-view.createPage",
     "onCommand:create-uniapp-view.createComponent"
   ],
-  "main": "./out/extension.js",
   "contributes": {
     "configuration": {
-      "title": "create-uniapp-view 创建 page|component 时的配置项",
+      "title": "create-uniapp-view 创建 page、component 时的配置项",
       "properties": {
         "create-uniapp-view.typescript": {
           "type": "boolean",
-          "default": false,
+          "default": true,
           "description": "创建视图时是否选择 TypeScript 为默认语言"
         },
         "create-uniapp-view.directory": {
           "type": "boolean",
-          "default": true,
+          "default": false,
           "description": "创建视图时是否创建同名文件夹"
         },
         "create-uniapp-view.name": {
@@ -47,7 +55,7 @@
             "index",
             "与文件夹同名"
           ],
-          "description": "同名文件夹中生成的文件名"
+          "description": "创建文件夹中生成的文件名"
         },
         "create-uniapp-view.style": {
           "type": [
@@ -121,39 +129,32 @@
       ]
     }
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/TuiMao233/create-uniapp-view.git"
-  },
   "scripts": {
     "vscode:prepublish": "npm run compile",
     "compile": "tsc -p ./",
-    "lint": "eslint src --ext ts",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
     "watch": "tsc -watch -p ./",
     "pretest": "npm run compile && npm run lint",
     "test": "node ./out/test/runTest.js"
   },
   "dependencies": {
-    "@types/ejs": "^3.1.0",
     "comment-json": "4.1.0",
-    "ejs": "^3.1.7",
-    "fs-extra": "^10.0.0",
-    "glob": "^7.1.6",
-    "lodash": "^4.17.20"
+    "ejs": "^3.1.9",
+    "fs-extra": "^10.1.0",
+    "glob": "^8.1.0",
+    "slash": "3.0.0"
   },
   "devDependencies": {
-    "@hairy/eslint": "^1.0.14",
-    "@types/fs-extra": "^9.0.12",
-    "@types/glob": "^7.1.1",
-    "@types/lodash": "^4.14.168",
-    "@types/mocha": "^7.0.2",
-    "@types/node": "^13.13.30",
-    "@types/vscode": "^1.47.0",
-    "@typescript-eslint/eslint-plugin": "^2.30.0",
-    "@typescript-eslint/parser": "^2.30.0",
-    "eslint": "^6.8.0",
-    "mocha": "^7.1.2",
-    "typescript": "^3.8.3",
-    "vscode-test": "^1.3.0"
+    "@antfu/eslint-config": "^0.38.4",
+    "@types/ejs": "^3.1.0",
+    "@types/fs-extra": "^11.0.1",
+    "@types/glob": "^8.1.0",
+    "@types/mocha": "^10.0.1",
+    "@types/node": "16.x",
+    "@types/vscode": "^1.77.0",
+    "eslint": "^8.36.0",
+    "mocha": "^10.2.0",
+    "typescript": "^4.9.5"
   }
 }

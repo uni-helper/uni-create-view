@@ -1,57 +1,60 @@
-import * as vscode from "vscode";
-import * as fs from 'fs-extra';
-import path = require('path');
+import path = require('path')
+import slash = require('slash')
+import * as vscode from 'vscode'
+import * as fs from 'fs-extra'
 
-/** 控制台打印信息 */
-export const logger = (type: string, msg = '') => {
+export type SearchFileResult = Promise<{ path: string; data: string } | null | undefined>
+
+export function logger(type: string, message = '') {
   switch (type) {
     case 'success':
-      return vscode.window.showInformationMessage(`Success: ${msg}`);
+      return vscode.window.showInformationMessage(`Success: ${message}`)
     case 'warning':
-      return vscode.window.showWarningMessage(`Warning: ${msg}`);
+      return vscode.window.showWarningMessage(`Warning: ${message}`)
     case 'error':
-      return vscode.window.showErrorMessage(`Failed: ${msg}`);
+      return vscode.window.showErrorMessage(`Failed: ${message}`)
   }
-};
+}
 
-export const getConfiguration = (section: string) => vscode.workspace.getConfiguration().get(section) as any;
+export function getConfiguration(section: string) {
+  return vscode.workspace.getConfiguration().get<any>(section)
+}
 
-export const isDirectory = (path: string) => {
+export function isDirectory(path: string) {
   try {
-    return fs.statSync(path).isDirectory();
-  } catch (error) {
-    return false;
+    return fs.statSync(path).isDirectory()
   }
-};
+  catch (error) {
+    return false
+  }
+}
 
-const isFileAccess = (path: string) => {
-  return new Promise(resolve => {
-    fs.access(path, (error) => {
-      if (error) { resolve(false); }
-      else { resolve(true); };
-    });
-  });
-};
+export function isFileAccess(path: string) {
+  return new Promise((resolve) => {
+    fs.access(path, (error: any) => {
+      if (error)
+        resolve(false)
+      else resolve(true)
+    })
+  })
+}
 
-type SearchFileResult = Promise<{ path: string, data: string } | null | undefined>;
-
-export const upwardSearchFile = (currentPath: string, fileName: string): SearchFileResult=> {
+export function upwardSearchFile(currentPath: string, fileName: string): SearchFileResult {
   const recursion = async (appPath: string): Promise<any> => {
-    const recursPath = fixPath(path.resolve(appPath, fileName));
+    const recursPath = slash(path.resolve(appPath, fileName))
     // 递归出口: 路径是根路径, 停止递归
-    if (recursPath.split('/').length < 1) { return null; }
+    if (recursPath.split('/').length < 1)
+      return null
 
     if (await isFileAccess(recursPath || '/')) {
-      const stat = fs.lstatSync(recursPath);
-      const [isFile, isDirectory] = [stat.isFile(), stat.isDirectory()];
-      const data = isFile ? fs.readFileSync(recursPath, 'utf-8') : '';
-      return { path: recursPath, data };
-    } else {
-      return recursion(path.resolve(appPath, '../'));
+      const stat = fs.lstatSync(recursPath)
+      const data = stat.isFile() ? fs.readFileSync(recursPath, 'utf-8') : ''
+      return { path: recursPath, data }
     }
-  };
+    else {
+      return recursion(path.resolve(appPath, '../'))
+    }
+  }
 
-  return recursion(currentPath);
-};
-
-export const fixPath = (path: string) => path.replace(/\\\\/g, '/').replace(/\\/g, '/');
+  return recursion(currentPath)
+}

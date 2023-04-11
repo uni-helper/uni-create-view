@@ -1,6 +1,6 @@
-import * as vscode from "vscode";
-import { generate } from "./generate";
-import { getConfiguration, logger } from "./utils";
+import * as vscode from 'vscode'
+import { generate } from './generate'
+import { getConfiguration, logger } from './utils'
 
 export interface CreateCommandOptions {
   /** 命令名称 */
@@ -8,20 +8,18 @@ export interface CreateCommandOptions {
   /** 命令 */
   command: string
   /** 配置 */
-  options?: { component?: boolean, subcontract?: boolean }
+  options?: { component?: boolean; subcontract?: boolean }
 }
 
+export function createCommand(options: CreateCommandOptions) {
+  return vscode.commands.registerCommand(options.command, async (uri) => {
+    const componentText = `输入${options.name}名称`
+    const pageText = `${componentText}，空格分隔字段（navigationBarTitleText）`
+    const input = await vscode.window.showInputBox({ prompt: options.name === '页面' ? pageText : componentText })
 
-
-export const createCommand = (options: CreateCommandOptions) => {
-  return vscode.commands.registerCommand(options.command, async uri => {
-    const componentText = `输入${options.name}名称`;
-    const pageText = `${componentText}，空格分隔字段（navigationBarTitleText）`;
-    const input = await vscode.window.showInputBox({ prompt: options.name === '页面' ? pageText :componentText  });
-  
     if (!input) {
-      logger("error", `${options.name}名称不能为空!`);
-      throw new Error(`${options.name}名称不能为空!`);
+      logger('error', `${options.name}名称不能为空!`)
+      throw new Error(`${options.name}名称不能为空!`)
     }
     const { message, status } = await generate({
       names: { view: input.split(' ')[0], page: input.split(' ')[1] || '' },
@@ -35,8 +33,8 @@ export const createCommand = (options: CreateCommandOptions) => {
       template: getConfiguration('create-uniapp-view.template'),
       setup: getConfiguration('create-uniapp-view.setup'),
       scoped: getConfiguration('create-uniapp-view.scoped'),
-    });
+    })
 
-    logger(status, message);
-  });
-};
+    logger(status, message)
+  })
+}

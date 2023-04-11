@@ -25,7 +25,7 @@ const content = `\
   // onPageScroll(event) {},
   // 页面处理函数--用户点击右上角分享
   // onShareAppMessage(options) {},\
-`;
+`
 
 const template = `\
 <template>
@@ -44,6 +44,6 @@ ${content}
 </script>
 
 <style<%- options.styleAttrs %>></style>\
-`;
+`
 
-export default template;
+export default template
