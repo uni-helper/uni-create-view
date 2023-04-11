@@ -9,6 +9,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 - 使用 pnpm 替换 yarn 工具
 - 添加 LICENSE 协议
 - 调整、优化插件默认配置
+- README 文档补充优化
 
 ## [2.0.6]
 - 删除页面无用的属性[#13]
