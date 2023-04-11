@@ -141,7 +141,7 @@
   "dependencies": {
     "comment-json": "4.1.0",
     "ejs": "^3.1.9",
-    "fs-extra": "^10.1.0",
+    "fs-extra": "^11.0.0",
     "glob": "^8.1.0",
     "slash": "3.0.0"
   },
