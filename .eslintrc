@@ -1,0 +1,8 @@
+{
+  "extends": "@antfu",
+  "ignorePatterns": [
+    "out",
+    "dist",
+    "**/*.d.ts"
+  ]
+}
