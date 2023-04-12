@@ -1,7 +1,7 @@
 <br>
 
 <p align="center">
-<img src="./public/logo.svg" style="width:100px;" />
+<img src="./public/logo.png" style="width:100px;" />
 </p>
 
 <h1 align="center">UniApp Create View for VS Code</h1>

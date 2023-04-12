@@ -4,6 +4,9 @@ All notable changes to the "uni-create-view" extension will be documented in thi
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
+## [2.0.9]
+- 更新 logo 图标
+
 ## [2.0.8]
 - 调整项目目录、新增 .eslintrc 配置
 - 使用 pnpm 替换 yarn 工具
