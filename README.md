@@ -1,4 +1,10 @@
-# UniApp Create View for VS Code
+<br>
+
+<p align="center">
+<img src="./public/logo.svg" style="width:100px;" />
+</p>
+
+<h1 align="center">UniApp Create View for VS Code</h1>
 
 在 VS Code 右键目录文件夹快速创建页面与组建，创建视图页面时将自动添加 `pages.json` 中！
 

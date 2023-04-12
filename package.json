@@ -24,7 +24,7 @@
     "Other"
   ],
   "main": "./out/extension.js",
-  "icon": "public/icon.png",
+  "icon": "public/icon.svg",
   "engines": {
     "vscode": "^1.77.0"
   },
