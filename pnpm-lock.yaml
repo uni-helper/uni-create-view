@@ -14,8 +14,8 @@ dependencies:
     specifier: ^8.1.0
     version: 8.1.0
   slash:
-    specifier: 3.0.0
-    version: 3.0.0
+    specifier: 5.0.0
+    version: 5.0.0
 
 devDependencies:
   '@types/ejs':
@@ -1524,9 +1524,9 @@ packages:
     dev: true
     optional: true
 
-  /slash@3.0.0:
-    resolution: {integrity: sha512-g9Q1haeby36OSStwb4ntCGGGaKsaVSjQ68fBxoQcutl5fS1vuY18H3wSt3jFyFtrkx+Kz0V1G85A4MyAdDMi2Q==}
-    engines: {node: '>=8'}
+  /slash@5.0.0:
+    resolution: {integrity: sha512-n6KkmvKS0623igEVj3FF0OZs1gYYJ0o0Hj939yc1fyxl2xt+xYpLnzJB6xBSqOfV9ZFLEWodBBN/heZJahuIJQ==}
+    engines: {node: '>=14.16'}
     dev: false
 
   /string-width@4.2.3:
