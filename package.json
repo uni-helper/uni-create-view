@@ -85,7 +85,7 @@
           "type": [
             "string"
           ],
-          "default": "vue2",
+          "default": "vue3",
           "enum": [
             "vue2",
             "vue3",
