@@ -2,8 +2,8 @@ lockfileVersion: '6.0'
 
 dependencies:
   comment-json:
-    specifier: 4.1.0
-    version: 4.1.0
+    specifier: 4.2.3
+    version: 4.2.3
   ejs:
     specifier: ^3.1.9
     version: 3.1.9
@@ -440,8 +440,8 @@ packages:
     engines: {node: '>= 6'}
     dev: true
 
-  /comment-json@4.1.0:
-    resolution: {integrity: sha512-WEghmVYaNq9NlWbrkzQTSsya9ycLyxJxpTQfZEan6a5Jomnjw18zS3Podf8q1Zf9BvonvQd/+Z7Z39L7KKzzdQ==}
+  /comment-json@4.2.3:
+    resolution: {integrity: sha512-SsxdiOf064DWoZLH799Ata6u7iV658A11PlWtZATDlXPpKGJnbJZ5Z24ybixAi+LUUqJ/GKowAejtC5GFUG7Tw==}
     engines: {node: '>= 6'}
     dependencies:
       array-timsort: 1.0.3
