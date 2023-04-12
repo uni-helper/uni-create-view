@@ -2,7 +2,7 @@
   "publisher": "mrmaoddxxaa",
   "name": "create-uniapp-view",
   "displayName": "uni-create-view",
-  "version": "2.0.9",
+  "version": "2.1.0",
   "description": "快速创建 uniapp 视图与组件!",
   "repository": {
     "type": "git",
@@ -26,7 +26,7 @@
   "main": "./out/extension.js",
   "icon": "public/logo.png",
   "engines": {
-    "vscode": "^1.77.0"
+    "vscode": "^1.47.0"
   },
   "activationEvents": [
     "onCommand:create-uniapp-view.createPage",
@@ -151,7 +151,7 @@
     "@types/glob": "^8.1.0",
     "@types/mocha": "^10.0.1",
     "@types/node": "18.x",
-    "@types/vscode": "^1.77.0",
+    "@types/vscode": "^1.47.0",
     "@vscode/vsce": "^2.18.0",
     "eslint": "^8.36.0",
     "mocha": "^10.2.0",

@@ -1,8 +1,8 @@
 <br>
 
 <p align="center">
-<img src="./public/logo.png" style="width:100px;" />
-</p>
+<img src="./public/logo.png" style="width:128px;" height="128" /></p>
+
 
 <h1 align="center">UniApp Create View for VS Code</h1>
 
