@@ -35,7 +35,7 @@
 
 右键打开菜单选择创建类型，可选择创建组件、页面、分包页面，空格分割视图名称与页面名称(navigationBarTitleText)
 
-![](./public/basic.gif)
+<img src="./public/basic.gif" style="max-width: 786px" />
 
 ## 深度目录
 
