@@ -154,7 +154,7 @@
     "@types/vscode": "^1.47.0",
     "@vscode/vsce": "^2.18.0",
     "eslint": "^8.36.0",
-    "mocha": "^10.2.0",
+    "mocha": "^11.0.0",
     "typescript": "^5.0.0"
   }
 }
