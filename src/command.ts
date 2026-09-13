@@ -13,6 +13,11 @@ export interface CreateCommandOptions {
 
 export function createCommand(options: CreateCommandOptions) {
   return vscode.commands.registerCommand(options.command, async (uri) => {
+    // 从命令面板调用时没有右键的目录上下文, 在弹输入框前先提示
+    if (!uri) {
+      logger('error', '请在资源管理器中右键目标文件夹后重试')
+      return
+    }
     const componentText = `输入${options.name}名称`
     const pageText = `${componentText}，空格分隔字段（navigationBarTitleText）`
     const input = await vscode.window.showInputBox({ prompt: options.name === '页面' ? pageText : componentText })
@@ -24,20 +29,26 @@ export function createCommand(options: CreateCommandOptions) {
       logger('error', `${options.name}名称不能为空!`)
       return
     }
-    const { message, status } = await generate({
-      names: { view: input.split(' ')[0], page: input.split(' ')[1] || '' },
-      nameType: getConfiguration('create-uniapp-view.name'),
-      path: uri.fsPath,
-      component: options.options?.component,
-      subcontract: options.options?.subcontract,
-      typescript: getConfiguration('create-uniapp-view.typescript'),
-      styleType: getConfiguration('create-uniapp-view.style'),
-      directory: getConfiguration('create-uniapp-view.directory'),
-      template: getConfiguration('create-uniapp-view.template'),
-      setup: getConfiguration('create-uniapp-view.setup'),
-      scoped: getConfiguration('create-uniapp-view.scoped'),
-    })
 
-    logger(status, message)
+    try {
+      const { message, status } = await generate({
+        names: { view: input.split(' ')[0], page: input.split(' ')[1] || '' },
+        nameType: getConfiguration('create-uniapp-view.name'),
+        path: uri.fsPath,
+        component: options.options?.component,
+        subcontract: options.options?.subcontract,
+        typescript: getConfiguration('create-uniapp-view.typescript'),
+        styleType: getConfiguration('create-uniapp-view.style'),
+        directory: getConfiguration('create-uniapp-view.directory'),
+        template: getConfiguration('create-uniapp-view.template'),
+        setup: getConfiguration('create-uniapp-view.setup'),
+        scoped: getConfiguration('create-uniapp-view.scoped'),
+      })
+      logger(status, message)
+    }
+    catch (error) {
+      // 兜底: 生成期异常转为单条提示, 避免 VS Code 的 command failed 弹窗
+      logger('error', error instanceof Error ? error.message : String(error))
+    }
   })
 }

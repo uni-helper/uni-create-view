@@ -44,10 +44,12 @@ export async function generate(options: GenerateOptions): Promise<GenerateResult
     return { status: 'error', message: '创建错误, 该路径不是文件夹' }
 
   if (options.directory) {
-    if (!isDirectory(directoryPath))
-      // 同步创建: 后面的 writeFileSync 依赖目录已存在, 异步 ensureDir 会与之竞态
-      fs.ensureDirSync(directoryPath)
-    else return { status: 'error', message: '创建错误, 该文件夹已存在!' }
+    if (isDirectory(directoryPath))
+      return { status: 'error', message: '创建错误, 该文件夹已存在!' }
+    if (fs.existsSync(directoryPath))
+      return { status: 'error', message: '创建错误, 已存在同名文件, 无法创建文件夹!' }
+    // 同步创建: 后面的 writeFileSync 依赖目录已存在, 异步 ensureDir 会与之竞态
+    fs.ensureDirSync(directoryPath)
   }
   // #endregion
 
@@ -55,8 +57,12 @@ export async function generate(options: GenerateOptions): Promise<GenerateResult
   const isIndex = options.nameType === 'index'
   const filePath = options.directory ? `${names.view}/${isIndex ? 'index' : names.view}.vue` : `${names.view}.vue`
   const targetPath = path.resolve(options.path, filePath)
-  if (fs.existsSync(targetPath) && !(await confirmOverwrite(filePath)))
-    return { status: 'warning', message: '已取消创建, 未覆盖已有文件' }
+  if (fs.existsSync(targetPath)) {
+    if (fs.statSync(targetPath).isDirectory())
+      return { status: 'error', message: '创建错误, 已存在同名文件夹, 请更换名称!' }
+    if (!(await confirmOverwrite(filePath)))
+      return { status: 'warning', message: '已取消创建, 未覆盖已有文件' }
+  }
   const template = createViewTemplate({ name: names.view, ...options })
   fs.writeFileSync(targetPath, template, { flag: 'w' })
   // #endregion
@@ -89,7 +95,14 @@ export async function writePagesJson(options: GenerateOptions) {
   const filePath = options.directory ? `${names.view}/${isIndex ? 'index' : names.view}` : `${names.view}`
 
   // 读取 pages.json, 准备 page 信息
-  const pagesJson = JSONC.parse(pagesJsonFile.data) as Record<string, any>
+  let pagesJson: Record<string, any>
+  try {
+    pagesJson = JSONC.parse(pagesJsonFile.data) as Record<string, any>
+  }
+  catch (error) {
+    // 此时页面文件已写入, 明确告知半成品状态
+    return { status: 'error', message: `页面文件已创建, 但 pages.json 解析失败未写入, 请检查其内容 (${error instanceof Error ? error.message : error})` }
+  }
   const page = { path: filePath, style: { navigationBarTitleText: names.page || names.view } }
 
   // 如果是分包页面
@@ -108,5 +121,11 @@ export async function writePagesJson(options: GenerateOptions) {
   }
 
   const newPagesJson = JSONC.stringify(pagesJson, null, '\t')
-  fs.writeFileSync(pagesJsonFile.path, newPagesJson)
+  try {
+    fs.writeFileSync(pagesJsonFile.path, newPagesJson)
+  }
+  catch (error) {
+    // 此时页面文件已写入, 明确告知半成品状态
+    return { status: 'error', message: `页面文件已创建, 但 pages.json 写入失败未更新 (${error instanceof Error ? error.message : error})` }
+  }
 }
