@@ -42,18 +42,17 @@ export function isFileAccess(path: string) {
 export function upwardSearchFile(currentPath: string, fileName: string): SearchFileResult {
   const recursion = async (appPath: string): Promise<any> => {
     const recursPath = slash(path.resolve(appPath, fileName))
-    // 递归出口: 路径是根路径, 停止递归
-    if (recursPath.split('/').length < 1)
-      return null
-
-    if (await isFileAccess(recursPath || '/')) {
+    if (await isFileAccess(recursPath)) {
       const stat = fs.lstatSync(recursPath)
-      const data = stat.isFile() ? fs.readFileSync(recursPath, 'utf-8') : ''
-      return { path: recursPath, data }
+      // 同名目录不作为命中, 继续向上找真正的文件
+      if (stat.isFile())
+        return { path: recursPath, data: fs.readFileSync(recursPath, 'utf-8') }
     }
-    else {
-      return recursion(path.resolve(appPath, '../'))
-    }
+    // 递归出口: 已到根路径仍未找到, 停止递归 (path.resolve 在根路径上不再变化)
+    const parent = path.resolve(appPath, '../')
+    if (parent === appPath)
+      return null
+    return recursion(parent)
   }
 
   return recursion(currentPath)
