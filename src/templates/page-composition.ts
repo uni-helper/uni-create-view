@@ -4,12 +4,10 @@ const template = `\
 </template>
 
 <script<%- options.scriptAttrs %>>
-<% if (!options.setup) { -%>
 import { defineComponent } from '@vue/composition-api'
 export default defineComponent({
   setup: () => {}
 })
-<% } -%>
 </script>
 
 <style<%- options.styleAttrs %>></style>\
