@@ -20,6 +20,12 @@ export function getConfiguration(section: string) {
   return vscode.workspace.getConfiguration().get<any>(section)
 }
 
+// 覆盖已有文件前的模态确认; 用户关闭弹窗视为拒绝
+export async function confirmOverwrite(fileName: string) {
+  const answer = await vscode.window.showWarningMessage(`文件 ${fileName} 已存在, 是否覆盖?`, { modal: true }, '覆盖')
+  return answer === '覆盖'
+}
+
 export function isDirectory(path: string) {
   try {
     return fs.statSync(path).isDirectory()

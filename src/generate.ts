@@ -3,7 +3,7 @@ import * as fs from 'fs-extra'
 import * as JSONC from 'comment-json'
 import slash = require('slash')
 import { createViewTemplate } from './template'
-import { isDirectory, upwardSearchFile } from './utils'
+import { confirmOverwrite, isDirectory, upwardSearchFile } from './utils'
 
 export interface GenerateOptions {
   /** 创建路径 */
@@ -54,8 +54,11 @@ export async function generate(options: GenerateOptions): Promise<GenerateResult
   // #region 生成模版
   const isIndex = options.nameType === 'index'
   const filePath = options.directory ? `${names.view}/${isIndex ? 'index' : names.view}.vue` : `${names.view}.vue`
+  const targetPath = path.resolve(options.path, filePath)
+  if (fs.existsSync(targetPath) && !(await confirmOverwrite(filePath)))
+    return { status: 'warning', message: '已取消创建, 未覆盖已有文件' }
   const template = createViewTemplate({ name: names.view, ...options })
-  fs.writeFileSync(path.resolve(options.path, filePath), template, { flag: 'w' })
+  fs.writeFileSync(targetPath, template, { flag: 'w' })
   // #endregion
 
   // 组件则跳过
