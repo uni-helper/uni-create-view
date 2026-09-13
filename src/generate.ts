@@ -45,7 +45,8 @@ export async function generate(options: GenerateOptions): Promise<GenerateResult
 
   if (options.directory) {
     if (!isDirectory(directoryPath))
-      fs.ensureDir(directoryPath)
+      // 同步创建: 后面的 writeFileSync 依赖目录已存在, 异步 ensureDir 会与之竞态
+      fs.ensureDirSync(directoryPath)
     else return { status: 'error', message: '创建错误, 该文件夹已存在!' }
   }
   // #endregion
