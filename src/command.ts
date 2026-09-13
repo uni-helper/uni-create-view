@@ -17,9 +17,12 @@ export function createCommand(options: CreateCommandOptions) {
     const pageText = `${componentText}，空格分隔字段（navigationBarTitleText）`
     const input = await vscode.window.showInputBox({ prompt: options.name === '页面' ? pageText : componentText })
 
+    // 用户按 Esc 取消, 静默返回
+    if (input === undefined)
+      return
     if (!input) {
       logger('error', `${options.name}名称不能为空!`)
-      throw new Error(`${options.name}名称不能为空!`)
+      return
     }
     const { message, status } = await generate({
       names: { view: input.split(' ')[0], page: input.split(' ')[1] || '' },
