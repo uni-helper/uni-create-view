@@ -4,6 +4,12 @@ All notable changes to the "uni-create-view" extension will be documented in thi
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
+## [2.1.0]
+- 模板根元素从 `div` 改为 `view`，兼容 uni-app 小程序端
+- 修复右键项目根目录时 pages.json 写入绝对路径的问题
+- 空输入不再导致扩展报错
+- 升级 ESLint 至 v10 并迁移到 flat config；构建管理迁移至 npm
+
 ## [2.0.9]
 - 更新 logo 图标
 
