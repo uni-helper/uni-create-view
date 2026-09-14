@@ -87,11 +87,11 @@ export async function writePagesJson(options: GenerateOptions) {
   if (!pagesJsonFile)
     return { status: 'warning', message: '创建页面成功! 但pages.json未找到' }
 
-  // 获取基于项目目录下的 pages 文件和根目录
-  const pagesSplit = pagesJsonFile.path.split('pages.json')
-
+  // pages.json 所在目录即项目根; 右键目录可能就是项目根本身, 必须用 path.relative 而非字符串 replace
+  // (replace 依赖 options.path 含尾斜杠前缀, 恰好相等时 no-op, 会把绝对路径写进 pages.json)
+  const projectRoot = path.dirname(pagesJsonFile.path)
+  const rootPath = slash(path.relative(projectRoot, options.path))
   const isIndex = options.nameType === 'index'
-  const rootPath = options.path.replace(pagesSplit[0], '')
   const filePath = options.directory ? `${names.view}/${isIndex ? 'index' : names.view}` : `${names.view}`
 
   // 读取 pages.json, 准备 page 信息
