@@ -26,7 +26,7 @@ export interface GenerateOptions {
   styleType?: string
   component?: boolean
   template?: string
-  setup?: string
+  setup?: boolean
   scoped?: boolean
   subcontract?: boolean
 }
@@ -79,18 +79,19 @@ export async function generate(options: GenerateOptions): Promise<GenerateResult
   return { status: 'success', message: '创建页面成功!' }
 }
 
-export async function writePagesJson(options: GenerateOptions) {
+export async function writePagesJson(options: GenerateOptions): Promise<GenerateResult | undefined> {
   const names = options.names
-  options.path = slash(options.path)
+  // slash 归一化只落局部变量, 不改调用方传入的 options 对象
+  const searchPath = slash(options.path)
 
-  const pagesJsonFile = await upwardSearchFile(options.path, 'pages.json')
+  const pagesJsonFile = await upwardSearchFile(searchPath, 'pages.json')
   if (!pagesJsonFile)
     return { status: 'warning', message: '创建页面成功! 但pages.json未找到' }
 
   // pages.json 所在目录即项目根; 右键目录可能就是项目根本身, 必须用 path.relative 而非字符串 replace
   // (replace 依赖 options.path 含尾斜杠前缀, 恰好相等时 no-op, 会把绝对路径写进 pages.json)
   const projectRoot = path.dirname(pagesJsonFile.path)
-  const rootPath = slash(path.relative(projectRoot, options.path))
+  const rootPath = slash(path.relative(projectRoot, searchPath))
   const isIndex = options.nameType === 'index'
   const filePath = options.directory ? `${names.view}/${isIndex ? 'index' : names.view}` : `${names.view}`
 

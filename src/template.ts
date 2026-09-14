@@ -18,12 +18,14 @@ export interface CreateViewTemplateOptions {
   typescript?: boolean
   styleType?: string
   component?: boolean
-  setup?: string
+  setup?: boolean
   scoped?: boolean
 }
 
 export function createViewTemplate(options: CreateViewTemplateOptions) {
-  const templates = ALL_TEMPLATES[options.template || 'vue2']
+  // 兜底与 create-uniapp-view.template 的默认值保持一致; 模板选择与 setup 判据必须用同一个值
+  const templateKey = options.template || 'vue3'
+  const templates = ALL_TEMPLATES[templateKey]
   const template = templates[options.component ? 'component' : 'page']
 
   const handle = (attrs: (string | boolean | undefined)[]) => {
@@ -33,7 +35,7 @@ export function createViewTemplate(options: CreateViewTemplateOptions) {
 
   const scriptAttrs = handle([
     options.typescript && 'lang="ts"',
-    options.template === 'vue3' && options.setup && 'setup',
+    templateKey === 'vue3' && options.setup && 'setup',
   ])
 
   const styleAttrs = handle([

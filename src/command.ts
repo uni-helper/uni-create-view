@@ -3,7 +3,7 @@ import { generate } from './generate'
 import { getConfiguration, logger } from './utils'
 
 export interface CreateCommandOptions {
-  /** 命令名称 */
+  /** 展示名称, 用于输入提示与错误文案 (命令标识符见 command 字段) */
   name: string
   /** 命令 */
   command: string
