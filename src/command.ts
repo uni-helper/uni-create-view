@@ -20,7 +20,8 @@ export function createCommand(options: CreateCommandOptions) {
     }
     const componentText = `输入${options.name}名称`
     const pageText = `${componentText}，空格分隔字段（navigationBarTitleText）`
-    const input = await vscode.window.showInputBox({ prompt: options.name === '页面' ? pageText : componentText })
+    // 提示语由 component 标志决定, 与 generate 的页面/组件分流保持同一判据
+    const input = await vscode.window.showInputBox({ prompt: options.options?.component ? componentText : pageText })
 
     // 用户按 Esc 取消, 静默返回
     if (input === undefined)
