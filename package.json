@@ -114,17 +114,20 @@
         {
           "group": "navigation@8",
           "command": "create-uniapp-view.createPage",
-          "title": "新建uniapp页面"
+          "title": "新建uniapp页面",
+          "when": "explorerResourceIsFolder"
         },
         {
           "group": "navigation@9",
           "command": "create-uniapp-view.createSubcontractPage",
-          "title": "新建uniapp页面(分包)"
+          "title": "新建uniapp页面(分包)",
+          "when": "explorerResourceIsFolder"
         },
         {
           "group": "navigation@9",
           "command": "create-uniapp-view.createComponent",
-          "title": "新建uniapp组件"
+          "title": "新建uniapp组件",
+          "when": "explorerResourceIsFolder"
         }
       ]
     }
