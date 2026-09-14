@@ -25,14 +25,18 @@ export function createCommand(options: CreateCommandOptions) {
     // 用户按 Esc 取消, 静默返回
     if (input === undefined)
       return
-    if (!input) {
+    // trim 后为空可同时拦下空串与纯空格输入
+    const trimmedInput = input.trim()
+    if (!trimmedInput) {
       logger('error', `${options.name}名称不能为空!`)
       return
     }
 
     try {
+      // 首段为文件名, 其余整体作为 navigationBarTitleText (标题可含空格)
+      const [view, ...titleParts] = trimmedInput.split(/\s+/)
       const { message, status } = await generate({
-        names: { view: input.split(' ')[0], page: input.split(' ')[1] || '' },
+        names: { view, page: titleParts.join(' ') },
         nameType: getConfiguration('create-uniapp-view.name'),
         path: uri.fsPath,
         component: options.options?.component,
