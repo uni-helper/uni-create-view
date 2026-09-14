@@ -1,5 +1,5 @@
+import fs from 'node:fs'
 import path from 'node:path'
-import * as fs from 'fs-extra'
 import slash from 'slash'
 import * as vscode from 'vscode'
 
@@ -20,9 +20,9 @@ export function getConfiguration(section: string) {
   return vscode.workspace.getConfiguration().get<any>(section)
 }
 
-// 覆盖已有文件前的模态确认; 用户关闭弹窗视为拒绝
+// 覆盖已有文件前的模态确认; 用户关闭弹窗或按 Esc 视为拒绝
 export async function confirmOverwrite(fileName: string) {
-  const answer = await vscode.window.showWarningMessage(`文件 ${fileName} 已存在, 是否覆盖?`, { modal: true }, '覆盖')
+  const answer = await vscode.window.showWarningMessage(`文件 ${fileName} 已存在, 是否覆盖?`, { modal: true }, '覆盖', '取消')
   return answer === '覆盖'
 }
 

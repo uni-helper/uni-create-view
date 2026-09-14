@@ -6,10 +6,11 @@ import pv2c from './templates/page-composition'
 import pv2 from './templates/page-vue2'
 import pv3 from './templates/page-vue3'
 
-const ALL_TEMPLATES = {
-  ['vue2' as string]: { page: pv2, component: cv2 },
-  ['vue3' as string]: { page: pv3, component: cv3 },
-  ['composition-api(vue2)' as string]: { page: pv2c, component: cv2c },
+// Record 索引签名: templateKey 是运行时字符串, 合法性由下方未知模板报错兜底
+const ALL_TEMPLATES: Record<string, { page: string, component: string }> = {
+  'vue2': { page: pv2, component: cv2 },
+  'vue3': { page: pv3, component: cv3 },
+  'composition-api(vue2)': { page: pv2c, component: cv2c },
 }
 
 export interface CreateViewTemplateOptions {
@@ -26,6 +27,9 @@ export function createViewTemplate(options: CreateViewTemplateOptions) {
   // 兜底与 create-uniapp-view.template 的默认值保持一致; 模板选择与 setup 判据必须用同一个值
   const templateKey = options.template || 'vue3'
   const templates = ALL_TEMPLATES[templateKey]
+  // 手改 settings.json 可绕过 enum 约束, 与其静默渲染错模板不如明确报错 (由 command.ts 统一转提示)
+  if (!templates)
+    throw new Error(`未知模板: ${templateKey}`)
   const template = templates[options.component ? 'component' : 'page']
 
   const handle = (attrs: (string | boolean | undefined)[]) => {

@@ -1,6 +1,6 @@
+import fs from 'node:fs'
 import path from 'node:path'
 import * as JSONC from 'comment-json'
-import * as fs from 'fs-extra'
 import slash from 'slash'
 import { createViewTemplate } from './template'
 import { confirmOverwrite, isDirectory, upwardSearchFile } from './utils'
@@ -48,12 +48,13 @@ export async function generate(options: GenerateOptions): Promise<GenerateResult
       return { status: 'error', message: '创建错误, 该文件夹已存在!' }
     if (fs.existsSync(directoryPath))
       return { status: 'error', message: '创建错误, 已存在同名文件, 无法创建文件夹!' }
-    // 同步创建: 后面的 writeFileSync 依赖目录已存在, 异步 ensureDir 会与之竞态
-    fs.ensureDirSync(directoryPath)
+    // 同步创建: 后面的 writeFileSync 依赖目录已存在, 异步会与之竞态
+    // mkdir recursive 不因目录已存在而抛错
+    fs.mkdirSync(directoryPath, { recursive: true })
   }
   // #endregion
 
-  // #region 生成模版
+  // #region 生成模板
   const isIndex = options.nameType === 'index'
   const filePath = options.directory ? `${names.view}/${isIndex ? 'index' : names.view}.vue` : `${names.view}.vue`
   const targetPath = path.resolve(options.path, filePath)
@@ -89,7 +90,7 @@ export async function writePagesJson(options: GenerateOptions): Promise<Generate
     return { status: 'warning', message: '创建页面成功! 但pages.json未找到' }
 
   // pages.json 所在目录即项目根; 右键目录可能就是项目根本身, 必须用 path.relative 而非字符串 replace
-  // (replace 依赖 options.path 含尾斜杠前缀, 恰好相等时 no-op, 会把绝对路径写进 pages.json)
+  // (字符串 replace 依赖右键路径包含项目根前缀, 恰好相等时无匹配而 no-op, 会把绝对路径写进 pages.json)
   const projectRoot = path.dirname(pagesJsonFile.path)
   const rootPath = slash(path.relative(projectRoot, searchPath))
   const isIndex = options.nameType === 'index'
@@ -110,6 +111,9 @@ export async function writePagesJson(options: GenerateOptions): Promise<Generate
   if (options.subcontract) {
     pagesJson.subPackages = pagesJson.subPackages || []
     const findRoot = pagesJson.subPackages.find((v: any) => v.root === rootPath)
+    // 已有同 path 条目时不重复追加, 避免反复创建把 pages.json 写脏
+    if (findRoot?.pages.some((v: any) => v.path === page.path))
+      return { status: 'warning', message: '创建页面成功! 但pages.json已存在该页面条目, 未重复写入' }
     const root = findRoot || { root: rootPath, pages: [] }
     root.pages.push(page)
     if (!findRoot)
@@ -118,6 +122,8 @@ export async function writePagesJson(options: GenerateOptions): Promise<Generate
   else {
     pagesJson.pages = pagesJson.pages || []
     page.path = slash(path.join(rootPath, page.path))
+    if (pagesJson.pages.some((v: any) => v.path === page.path))
+      return { status: 'warning', message: '创建页面成功! 但pages.json已存在该页面条目, 未重复写入' }
     pagesJson.pages.push(page)
   }
 
