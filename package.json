@@ -19,7 +19,6 @@
     "uni-app",
     "uni"
   ],
-  "prettier": "@hairy/eslint/prettier.js",
   "categories": [
     "Other"
   ],
@@ -137,28 +136,22 @@
     "compile": "tsc -p ./",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "watch": "tsc -watch -p ./",
-    "pretest": "npm run compile && npm run lint",
-    "test": "node ./out/test/runTest.js"
+    "watch": "tsc -watch -p ./"
   },
   "dependencies": {
     "comment-json": "4.5.1",
     "ejs": "^5.0.0",
     "fs-extra": "^11.0.0",
-    "glob": "^8.1.0",
     "slash": "3.0.0"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^9.5.1",
     "@types/ejs": "^3.1.0",
     "@types/fs-extra": "^11.0.1",
-    "@types/glob": "^8.1.0",
-    "@types/mocha": "^10.0.1",
     "@types/node": "24.x",
     "@types/vscode": "^1.47.0",
     "@vscode/vsce": "^2.18.0",
     "eslint": "^10.10.0",
-    "mocha": "^10.2.0",
     "typescript": "^6.0.0"
   }
 }
