@@ -7,12 +7,12 @@
 <h1 align="center">UniApp Create View for VS Code</h1>
 
 <p align="center">
-在 VS Code 右键目录文件夹快速创建页面与组件，创建视图页面时将自动添加 `pages.json` 中！
+在 VS Code 右键目录文件夹快速创建页面与组件，创建视图页面时将自动写入 `pages.json`！
 </p>
 
 <br>
 <p align="center">
-<a href="https://github.com/hairyf/uni-composition-api">Visual Studio</a> |
+<a href="https://marketplace.visualstudio.com/items?itemName=mrmaoddxxaa.create-uniapp-view">Visual Studio</a> |
 <a href="https://github.com/uni-helper/uni-create-view">Github Page</a> |
 <a href="https://valaxy-blog-henna.vercel.app/">Hairy's Blog</a>
 </p>
@@ -29,7 +29,7 @@
 
 <!-- 与是否开启 `typescript` 模板，以及是否为单文件模式 -->
 
-> 使用 `composition-api(vue2)` 模版，建议配合 [uni-composition-api](https://github.com/hairyf/uni-composition-api) 使用
+> 使用 `composition-api(vue2)` 模板，建议配合 [uni-composition-api](https://github.com/hairyf/uni-composition-api) 使用
 
 ## 基本使用（page、component）
 
