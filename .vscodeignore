@@ -1,11 +1,11 @@
 .vscode/**
 .vscode-test/**
 src/**
+.github/**
+.pi/**
 .gitignore
-.yarnrc
-vsc-extension-quickstart.md
 **/tsconfig.json
 eslint.config.mjs
-pnpm-workspace.yaml
+renovate.json
 **/*.map
 **/*.ts

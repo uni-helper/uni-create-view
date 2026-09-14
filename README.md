@@ -12,9 +12,9 @@
 
 <br>
 <p align="center">
-<a href="https://github.com/TuiMao233/uni-composition-api">Visual Studio</a> |
+<a href="https://github.com/hairyf/uni-composition-api">Visual Studio</a> |
 <a href="https://github.com/uni-helper/uni-create-view">Github Page</a> |
-<a href="https://www.hairy.blog/">Hairy's Blog</a>
+<a href="https://valaxy-blog-henna.vercel.app/">Hairy's Blog</a>
 </p>
 
 <br>
@@ -29,7 +29,7 @@
 
 <!-- 与是否开启 `typescript` 模板，以及是否为单文件模式 -->
 
-> 使用 `composition-api(vue2)` 模版，建议配合 [uni-composition-api](https://github.com/TuiMao233/uni-composition-api) 使用
+> 使用 `composition-api(vue2)` 模版，建议配合 [uni-composition-api](https://github.com/hairyf/uni-composition-api) 使用
 
 ## 基本使用（page、component）
 

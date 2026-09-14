@@ -25,12 +25,8 @@
   "main": "./out/extension.js",
   "icon": "public/logo.png",
   "engines": {
-    "vscode": "^1.47.0"
+    "vscode": "^1.74.0"
   },
-  "activationEvents": [
-    "onCommand:create-uniapp-view.createPage",
-    "onCommand:create-uniapp-view.createComponent"
-  ],
   "contributes": {
     "configuration": {
       "title": "create-uniapp-view 创建 page、component 时的配置项",
@@ -149,8 +145,8 @@
     "@types/ejs": "^3.1.0",
     "@types/fs-extra": "^11.0.1",
     "@types/node": "24.x",
-    "@types/vscode": "^1.47.0",
-    "@vscode/vsce": "^2.18.0",
+    "@types/vscode": "^1.74.0",
+    "@vscode/vsce": "^3.9.2",
     "eslint": "^10.10.0",
     "typescript": "^6.0.0"
   }
