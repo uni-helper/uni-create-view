@@ -29,7 +29,7 @@ const content = `\
 
 const template = `\
 <template>
-  <div class="<%- options.name%>"><%- options.name %></div>
+  <view class="<%- options.name%>"><%- options.name %></view>
 </template>
 
 <script<%- options.scriptAttrs %>>

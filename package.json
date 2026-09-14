@@ -4,6 +4,7 @@
   "displayName": "uni-create-view",
   "version": "2.1.0",
   "description": "快速创建 uniapp 视图与组件!",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/uni-helper/uni-create-view",
@@ -19,19 +20,21 @@
     "uni-app",
     "uni"
   ],
-  "prettier": "@hairy/eslint/prettier.js",
   "categories": [
     "Other"
   ],
   "main": "./out/extension.js",
   "icon": "public/logo.png",
-  "engines": {
-    "vscode": "^1.47.0"
-  },
-  "activationEvents": [
-    "onCommand:create-uniapp-view.createPage",
-    "onCommand:create-uniapp-view.createComponent"
+  "files": [
+    "CHANGELOG.md",
+    "LICENSE",
+    "node_modules",
+    "out",
+    "public"
   ],
+  "engines": {
+    "vscode": "^1.137.0"
+  },
   "contributes": {
     "configuration": {
       "title": "create-uniapp-view 创建 page、component 时的配置项",
@@ -74,12 +77,12 @@
         "create-uniapp-view.scoped": {
           "type": "boolean",
           "default": true,
-          "description": "创建模版时，是否使用 <style scoped>"
+          "description": "创建模板时，是否使用 <style scoped>"
         },
         "create-uniapp-view.setup": {
           "type": "boolean",
           "default": true,
-          "description": "创建 vue3 模版时，是否使用 <script setup>"
+          "description": "创建 vue3 模板时，是否使用 <script setup>"
         },
         "create-uniapp-view.template": {
           "type": [
@@ -91,7 +94,7 @@
             "vue3",
             "composition-api(vue2)"
           ],
-          "description": "选择创建的模版"
+          "description": "选择创建的模板"
         }
       }
     },
@@ -114,47 +117,50 @@
         {
           "group": "navigation@8",
           "command": "create-uniapp-view.createPage",
-          "title": "新建uniapp页面"
+          "title": "新建uniapp页面",
+          "when": "explorerResourceIsFolder"
         },
         {
           "group": "navigation@9",
           "command": "create-uniapp-view.createSubcontractPage",
-          "title": "新建uniapp页面(分包)"
+          "title": "新建uniapp页面(分包)",
+          "when": "explorerResourceIsFolder"
         },
         {
           "group": "navigation@9",
           "command": "create-uniapp-view.createComponent",
-          "title": "新建uniapp组件"
+          "title": "新建uniapp组件",
+          "when": "explorerResourceIsFolder"
         }
       ]
     }
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",
-    "compile": "tsc -p ./",
+    "compile": "tsc",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "watch": "tsc -watch -p ./",
-    "pretest": "npm run compile && npm run lint",
-    "test": "node ./out/test/runTest.js"
+    "watch": "tsc -watch",
+    "release": "bumpp",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "comment-json": "4.5.1",
-    "ejs": "^5.0.0",
-    "fs-extra": "^11.0.0",
-    "glob": "^8.1.0",
-    "slash": "3.0.0"
+    "comment-json": "^4.6.2",
+    "ejs": "^6.0.1",
+    "slash": "^3.0.0"
   },
   "devDependencies": {
-    "@types/ejs": "^3.1.0",
-    "@types/fs-extra": "^11.0.1",
-    "@types/glob": "^8.1.0",
-    "@types/mocha": "^10.0.1",
-    "@types/node": "24.x",
-    "@types/vscode": "^1.47.0",
-    "@vscode/vsce": "^2.18.0",
-    "eslint": "^8.36.0",
-    "mocha": "^10.2.0",
-    "typescript": "^6.0.0"
+    "@antfu/eslint-config": "^9.5.1",
+    "@types/ejs": "^3.1.5",
+    "@types/node": "^24.13.4",
+    "@types/vscode": "^1.137.0",
+    "@vscode/vsce": "^3.9.2",
+    "bumpp": "^12.3.0",
+    "eslint": "^10.10.0",
+    "typescript": "^6.0.3"
+  },
+  "allowScripts": {
+    "@vscode/vsce-sign@2.1.0": true,
+    "keytar@7.9.0": true
   }
 }

@@ -4,6 +4,15 @@ All notable changes to the "uni-create-view" extension will be documented in thi
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
+## [2.1.0]
+- 模板根元素从 `div` 改为 `view`，兼容 uni-app 小程序端
+- 修复右键项目根目录时 pages.json 写入绝对路径的问题
+- 重复创建同名页面时不再向 pages.json 追加重复条目
+- 模板配置非法时给出明确错误提示
+- 覆盖确认弹窗增加显式"取消"按钮
+- 空输入不再导致扩展报错
+- 升级 ESLint 至 v10 并迁移到 flat config；构建管理迁移至 npm
+
 ## [2.0.9]
 - 更新 logo 图标
 
@@ -33,9 +42,9 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 - 重构主逻辑
 - 修复无法写入 pages.json
 - 支持 setup 语法
-- 支持 vue3 模版
+- 支持 vue3 模板
 - 支持自定义名称 index 或者使用文件夹名称
-- 模版逻辑优化，使用 ejs 实现
+- 模板逻辑优化，使用 ejs 实现
 - 优化查询上层文件逻辑
 
 ## [1.3.6]
