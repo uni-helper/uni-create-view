@@ -8,7 +8,7 @@ export interface CreateCommandOptions {
   /** 命令 */
   command: string
   /** 配置 */
-  options?: { component?: boolean; subcontract?: boolean }
+  options?: { component?: boolean, subcontract?: boolean }
 }
 
 export function createCommand(options: CreateCommandOptions) {

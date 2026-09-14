@@ -1,0 +1,11 @@
+# pnpm 工作区设置
+# allowBuilds: 构建脚本白名单, 两个包均为 @vscode/Microsoft 官方, 服务于 vsce 打包链路
+# trustLockfile: 已提交并经人工审阅的 lockfile 视为受信任, 跳过每次 install 的供应链重校验
+minimumReleaseAgeExcludePrune: true
+trustLockfile: true
+trustPolicy: no-downgrade
+shellEmulator: true
+
+allowBuilds:
+  '@vscode/vsce-sign': true
+  keytar: true

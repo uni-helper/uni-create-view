@@ -1,9 +1,9 @@
-import path = require('path')
-import slash = require('slash')
-import * as vscode from 'vscode'
+import path from 'node:path'
 import * as fs from 'fs-extra'
+import slash from 'slash'
+import * as vscode from 'vscode'
 
-export type SearchFileResult = Promise<{ path: string; data: string } | null | undefined>
+export type SearchFileResult = Promise<{ path: string, data: string } | null | undefined>
 
 export function logger(type: string, message = '') {
   switch (type) {
@@ -30,7 +30,7 @@ export function isDirectory(path: string) {
   try {
     return fs.statSync(path).isDirectory()
   }
-  catch (error) {
+  catch {
     return false
   }
 }

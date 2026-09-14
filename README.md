@@ -1,7 +1,7 @@
 <br>
 
 <p align="center">
-<img src="./public/logo.png" style="width:128px;" height="128" /></p>
+<img src="./public/logo.png" alt="uni-create-view logo" style="width:128px;" height="128" /></p>
 
 
 <h1 align="center">UniApp Create View for VS Code</h1>
@@ -36,14 +36,14 @@
 右键打开菜单选择创建类型，可选择创建组件、页面、分包页面，空格分割视图名称与页面名称(navigationBarTitleText)
 
 <p style="max-width: 786px">
-<img src="./public/basic.gif" />
+<img src="./public/basic.gif" alt="基本使用演示: 右键文件夹创建页面与组件" />
 </p>
 
 ## 深度目录
 
 `^1.3.0` 新增扩展能力，无特殊需求还是建议使用单文件模式。
 
-![](https://qie-online-sale-qiniu.wsandos.com/exts.gif)
+![深度目录演示: 创建多层目录页面](https://qie-online-sale-qiniu.wsandos.com/exts.gif)
 
 ## 分包页面
 
@@ -51,7 +51,7 @@
 
 > 注意：`cli` 创建的项目需要在`package.json`中添加参数 `--minimize`，具体参考官方文档：[dcloud.io](https://uniapp.dcloud.io/collocation/pages?id=subpackages)
 
-![](https://qie-online-sale-qiniu.wsandos.com/1dddw1334.gif)
+![分包页面演示: 创建分包页面并写入 subPackages](https://qie-online-sale-qiniu.wsandos.com/1dddw1334.gif)
 
 ## License
 

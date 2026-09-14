@@ -1,7 +1,7 @@
-import path = require('path')
-import * as fs from 'fs-extra'
+import path from 'node:path'
 import * as JSONC from 'comment-json'
-import slash = require('slash')
+import * as fs from 'fs-extra'
+import slash from 'slash'
 import { createViewTemplate } from './template'
 import { confirmOverwrite, isDirectory, upwardSearchFile } from './utils'
 
