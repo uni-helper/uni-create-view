@@ -3,30 +3,30 @@ name: Release
 on:
   push:
     tags:
-      - 'v*' # Triggers on any tag starting with v
+      - 'v*'
 
 jobs:
   release:
     runs-on: ubuntu-latest
-    # changelogithub 创建 GitHub Release 需要 contents:write (仓库默认 workflow 权限为 read-only 时会 403)
-    permissions:
-      contents: write
+
     steps:
       - uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
-      - uses: actions/setup-node@v7
+      - uses: voidzero-dev/setup-vp@v1.19.0
         with:
-          node-version: 24
-          cache: npm
+          cache: true
+          run-install: true
 
-      - run: npx changelogithub
-        env:
-          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
-
-      - run: npm ci
-
-      - run: npx @vscode/vsce publish
+      - run: vpx @vscode/vsce publish
         env:
           VSCE_PAT: ${{ secrets.VSCE_PAT }}
+
+      - run: vpx ovsx publish
+        env:
+          OVSX_PAT: ${{ secrets.OVSX_PAT }}
+
+      - run: vpx changelogithub
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}

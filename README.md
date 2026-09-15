@@ -12,7 +12,8 @@
 
 <br>
 <p align="center">
-<a href="https://marketplace.visualstudio.com/items?itemName=mrmaoddxxaa.create-uniapp-view">Visual Studio</a> |
+<a href="https://marketplace.visualstudio.com/items?itemName=mrmaoddxxaa.create-uniapp-view">Visual Studio Marketplace</a> |
+<a href="https://open-vsx.org/extension/mrmaoddxxaa/create-uniapp-view">OpenVSX</a> |
 <a href="https://github.com/uni-helper/uni-create-view">Github Page</a> |
 <a href="https://valaxy-blog-henna.vercel.app/">Hairy's Blog</a>
 </p>
