@@ -1,5 +1,11 @@
 # 改动日志
 
+## [2.2.1] - 2026-09-15
+- CI 扩展为 Ubuntu / macOS / Windows × Node 22 / 24 / 26 矩阵构建
+- CI 与发布流程迁移到 vp 工具链（setup-vp / vpr / vpx）
+- 新增 OpenVSX 发布渠道，README 增加 OpenVSX 入口
+- 移除 Renovate 配置
+
 ## [2.2.0] - 2026-09-15
 - 模板根元素从 `div` 改为 `view`，兼容 uni-app 小程序端
 - 覆盖已有文件前弹出确认对话框，提供明确的"覆盖 / 取消"按钮，取消或关闭弹窗都不会覆盖
