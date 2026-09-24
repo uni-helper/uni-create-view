@@ -145,7 +145,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "comment-json": "^4.6.2",
+    "comment-json": "^5.0.0",
     "ejs": "^6.0.1",
     "slash": "^3.0.0"
   },
