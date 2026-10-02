@@ -40,7 +40,7 @@ Release workflow: `vpx @vscode/vsce publish` (VSCE_PAT) → `vpx ovsx publish` (
 - When the `.vue` file was already written but `pages.json` parse/write fails, the message must say so (half-done state), because the page file exists without its registration.
 - Directory creation is synchronous (`mkdirSync`) — an async mkdir raced with `writeFileSync` and failed intermittently (bug fixed in 2.2.0).
 - `upwardSearchFile` walks up from the right-clicked folder, stops at the filesystem root, and does not treat a directory named `pages.json` as a hit (lstat check).
-- Input is split on whitespace: first token = file/folder name, the rest joined = `navigationBarTitleText` (title may contain spaces). Esc or empty input is a silent cancel, not an error.
+- Input is split on whitespace: first token = file/folder name, the rest joined = `navigationBarTitleText` (title may contain spaces). Esc is a silent cancel; empty or whitespace-only input shows an error and aborts.
 - `template.ts` defaults unknown/empty `template` handling: empty falls back to `vue3`, an unknown non-empty value throws — hand-edited settings can bypass the enum, so the throw is intentional.
 
 ## Conventions
