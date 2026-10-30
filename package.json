@@ -3,6 +3,7 @@
   "name": "create-uniapp-view",
   "displayName": "uni-create-view",
   "version": "2.2.2",
+  "packageManager": "npm@12.2.1",
   "description": "快速创建 uniapp 视图与组件!",
   "license": "MIT",
   "repository": {
@@ -150,18 +151,12 @@
     "slash": "^3.0.0"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^9.5.1",
+    "@antfu/eslint-config": "^10.0.0",
     "@types/ejs": "^3.1.5",
-    "@types/node": "^24.13.4",
+    "@types/node": "^26.6.6",
     "@types/vscode": "^1.137.0",
-    "@vscode/vsce": "^3.9.2",
     "bumpp": "^12.3.0",
-    "eslint": "^10.10.0",
-    "ovsx": "^1.2.0",
+    "eslint": "^10.13.0",
     "typescript": "^6.0.3"
-  },
-  "allowScripts": {
-    "@vscode/vsce-sign@2.1.0": true,
-    "keytar@7.9.0": true
   }
 }
