@@ -1,52 +1,52 @@
 # create-uniapp-view
 
-VSCode extension for uni-app: right-click a folder to scaffold page/component `.vue` files, and pages are auto-registered into the nearest `pages.json` (main `pages` or `subPackages`) with comments preserved. Repo is `uni-create-view` but the extension id is `mrmaoddxxaa.create-uniapp-view` — publisher `mrmaoddxxaa` (the original author), NOT `uni-helper`; marketplace/OpenVSX links and badges must use that id.
+uni-app 的 VS Code 扩展：在资源管理器里右键文件夹，快速生成页面或组件的 `.vue` 文件，页面还会自动写进最近的 `pages.json`（`pages` 或 `subPackages`）并保留原有注释。仓库名是 `uni-create-view`，扩展 id 是 `mrmaoddxxaa.create-uniapp-view`，publisher 为 `mrmaoddxxaa`（原作者），不是 `uni-helper`。市场与 OpenVSX 的链接、徽章必须用这个 id。
 
-## Project
+## 项目
 
-- **Language/runtime:** TypeScript (strict, ES2020 target, CommonJS modules) compiled with plain `tsc` to `out/` — no bundler (esbuild was removed in 2.2.0). Runtime deps (`comment-json`, `ejs`, `slash`) ship inside the VSIX via `node_modules` in the `files` field, so keep them lean.
-- **Toolchain:** npm (lockfile committed; migrated from pnpm). ESLint 10 flat config via `@antfu/eslint-config` (`eslint.config.mjs`, ignores `out`, `dist`, `**/*.d.ts`). bumpp for releases. No test framework — CI (`.github/workflows/ci.yml`, `voidzero-dev/setup-vp`) runs `vpr lint` + `vpr compile` only, on Node 22/24/26 × ubuntu/macos/windows. No Node pin file; the consumer-facing pin is `engines.vscode: ^1.137.0`.
-- **Artifact:** the VSIX ships `CHANGELOG.md`, `LICENSE`, `node_modules`, `out`, `public` (see `files` + `icon`). Published to both VSCode Marketplace and OpenVSX on `v*` tags.
+- **语言与运行时**：TypeScript（strict、target ES2020、CommonJS），用 `tsc` 直接编译到 `out/`，没有打包步骤（esbuild 在 2.2.0 移除）。`comment-json`、`ejs`、`slash` 三个运行时依赖靠 `files` 里的 `node_modules` 一起打进 VSIX，新增运行时依赖前先看包体积。
+- **工具链**：npm，`package.json` 的 `packageManager` 固定为 `npm@12.2.1`，`package-lock.json` 入库（已从 pnpm 迁移）。本地 Node 版本看 `.node-version`（26），CI 覆盖 22 / 24 / 26。ESLint 10 用 flat config，配置源是 `eslint.config.mjs` 里的 `@antfu/eslint-config`，忽略 `out`、`dist`、`**/*.d.ts`。发版用 bumpp。仓库没有测试框架，CI（`.github/workflows/ci.yml`，`voidzero-dev/setup-vp@v1.22.0`）只跑 `vpr lint` 和 `vpr compile`，矩阵为 Node 22 / 24 / 26 × ubuntu / macos / windows。对使用者的版本要求只有 `engines.vscode: ^1.137.0`。
+- **产物**：VSIX 包含 `CHANGELOG.md`、`LICENSE`、`node_modules`、`out`、`public`（见 `files` 与 `icon`）。推 `v*` tag 触发发布，同时上架 VS Code Marketplace 与 OpenVSX。
 
-## Commands
+## 常用命令
 
 ```bash
 npm install
 npm run compile      # tsc → out/
-npm run watch        # tsc -watch; F5 "Run Extension" uses this as its preLaunchTask
+npm run watch        # tsc -watch; F5「运行扩展」用它作为 preLaunchTask
 npm run typecheck    # tsc --noEmit
 npm run lint         # eslint .
 npm run lint:fix
-npm run release      # bumpp — bump/commit/tag/push; the v* tag triggers .github/workflows/release.yml
+npm run release      # bumpp — 提版本号、提交、打 tag 并推送; v* tag 触发 .github/workflows/release.yml
 ```
 
-Release workflow: `vpx @vscode/vsce publish` (VSCE_PAT) → `vpx ovsx publish` (OVSX_PAT) → changelogithub GitHub Release (GITHUB_TOKEN).
+发布流程：`vpx @vscode/vsce@3.9.2 publish`（VSCE_PAT）→ `vpx ovsx@1.2.0 publish`（OVSX_PAT）→ changelogithub 创建 GitHub Release（GITHUB_TOKEN）。`@vscode/vsce` 和 `ovsx` 不在 devDependencies 里，`vpx` 会从 registry 拉取，所以版本号写死在 workflow 里。
 
-## Architecture
+## 架构
 
-| File | Role |
+| 文件 | 职责 |
 |---|---|
-| `src/extension.ts` | entry point; registers the three commands |
-| `src/command.ts` | command wrapper: guards the no-URI case (command palette → error hint), shows the input box, splits input, funnels all generate errors into `logger` messages |
-| `src/generate.ts` | core flow: validate target dir, sync-mkdir when `directory` is on, write the `.vue` file (modal overwrite confirm), then `writePagesJson` |
-| `src/utils.ts` | `logger` (user-facing message boxes), `getConfiguration` (reads the full key including the `create-uniapp-view.` prefix), `confirmOverwrite` (modal; dismiss/Esc = refuse), `upwardSearchFile` |
-| `src/template.ts` | picks one of six templates by `template` × `component`, renders with ejs; unknown template name throws |
-| `src/templates/*.ts` | raw ejs template strings: page/component × vue2/vue3/composition-api |
+| `src/extension.ts` | 入口，注册三个命令 |
+| `src/command.ts` | 命令封装：拦住没有 URI 的情况（从命令面板调用时提示右键），弹输入框，拆分输入，把生成阶段的异常统一转成提示 |
+| `src/generate.ts` | 主流程：校验目标目录，`directory` 打开时同步建目录，写入 `.vue`（覆盖前弹模态确认），再调 `writePagesJson` |
+| `src/utils.ts` | `logger`（面向用户的消息框）、`getConfiguration`（读带 `create-uniapp-view.` 前缀的完整 key）、`confirmOverwrite`（模态框，关闭或按 Esc 视为拒绝）、`upwardSearchFile` |
+| `src/template.ts` | 按 `template` × `component` 从六份模板里选一份，用 ejs 渲染；模板名未知时抛错 |
+| `src/templates/*.ts` | 六份 ejs 模板字符串：页面 / 组件 × vue2 / vue3 / composition-api |
 
-### Behavior invariants (don't regress)
+### 行为约束（不要改坏）
 
-- The page path written to `pages.json` is relative to the directory containing `pages.json`, computed with `path.relative` — never the absolute right-clicked path, and never string `replace` (it no-ops when the right-clicked dir IS the project root and would write an absolute path; bug fixed in 2.2.0).
-- Duplicate page entries are skipped, not re-appended.
-- When the `.vue` file was already written but `pages.json` parse/write fails, the message must say so (half-done state), because the page file exists without its registration.
-- Directory creation is synchronous (`mkdirSync`) — an async mkdir raced with `writeFileSync` and failed intermittently (bug fixed in 2.2.0).
-- `upwardSearchFile` walks up from the right-clicked folder, stops at the filesystem root, and does not treat a directory named `pages.json` as a hit (lstat check).
-- Input is split on whitespace: first token = file/folder name, the rest joined = `navigationBarTitleText` (title may contain spaces). Esc is a silent cancel; empty or whitespace-only input shows an error and aborts.
-- `template.ts` defaults unknown/empty `template` handling: empty falls back to `vue3`, an unknown non-empty value throws — hand-edited settings can bypass the enum, so the throw is intentional.
+- 写进 `pages.json` 的页面路径以 `pages.json` 所在目录为基准，用 `path.relative` 算，不能用右键目录的绝对路径，也不能用字符串 `replace`。右键目录正好是项目根时 `replace` 匹配不到、变成空操作，会把绝对路径写进 `pages.json`（2.2.0 修过）。
+- 已存在的页面条目不重复追加。
+- `.vue` 文件已写入但 `pages.json` 解析或写入失败时，提示必须说明这是半成品状态，因为页面文件存在却没有注册。
+- 建目录用同步的 `mkdirSync`。异步 mkdir 会和 `writeFileSync` 抢时序，偶发失败（2.2.0 修过）。
+- `upwardSearchFile` 从右键目录往上找，到文件系统根停止；同名目录不算命中（有 lstat 判断）。
+- 输入按空白拆分：第一段是文件或文件夹名，其余拼起来作为 `navigationBarTitleText`（标题可以带空格）。按 Esc 是静默取消；输入为空或全是空白时报错并中止。
+- `template.ts` 对空值和非法值的处理不同：空值回落到 `vue3`，非空但未知的名字抛错。手改 `settings.json` 能绕过 enum 约束，这个抛错是有意为之。
 
-## Conventions
+## 约定
 
-- **User-facing strings are Simplified Chinese** — command titles, prompts, error/warning messages, the overwrite dialog.
-- **Docs language:** README and CONTRIBUTING are Simplified Chinese; AGENTS.md is English (org convention). Source comments are Chinese.
-- **Settings namespace:** every config key is `create-uniapp-view.*` and read with the full key. `contributes.configuration` / `contributes.commands` in `package.json` are the user contract — README's 「扩展设置」/「命令」tables must stay in sync with them.
-- **Branches/commits:** `feat/xxx`, `fix/xxx`, `docs/xxx`; Conventional Commits.
-- **Release coupling:** every release needs a CHANGELOG.md entry (commit it before `npm run release`); the VSIX bundles `node_modules` since there is no bundling step.
+- **面向用户的文案用简体中文**：命令标题、输入提示、错误与警告、覆盖对话框。
+- **文档语言**：README、CONTRIBUTING 和本文件都是简体中文，源码注释也用中文。
+- **配置命名空间**：所有配置项都是 `create-uniapp-view.*`，读取时带完整 key。`package.json` 里的 `contributes.configuration` 和 `contributes.commands` 是面向用户的契约，README 的「扩展设置」「命令」两节必须与之同步。
+- **分支与提交**：分支用 `feat/xxx`、`fix/xxx`、`docs/xxx`，提交遵循 Conventional Commits。
+- **发版耦合**：每次发版都要先在 CHANGELOG.md 补上版本条目并提交，再跑 `npm run release`。没有打包步骤，所以 VSIX 直接带 `node_modules`。

@@ -4,8 +4,8 @@
 
 ## 前置条件
 
-- Node.js 22 / 24 / 26（CI 矩阵覆盖这三个版本；仓库没有 `.node-version` 等 pin 文件，本地用较新版本即可）
-- npm（包管理工具，仓库带 `package-lock.json`；未通过 `packageManager` 固定版本）
+- Node.js 26（`.node-version` 指定的本地版本；CI 矩阵覆盖 22 / 24 / 26）
+- npm 12（`package.json` 的 `packageManager` 固定为 `npm@12.2.1`，仓库带 `package-lock.json`）
 - Git（用于克隆与版本管理）
 - VSCode `^1.137.0`（扩展的引擎要求，本地调试也需要）
 
@@ -77,7 +77,7 @@ npm run compile      # 确认能编译出 out/
 
 ## 发布
 
-维护者先在 CHANGELOG.md 补上版本条目，然后运行 `npm run release`（[bumpp](https://github.com/antfu/bumpp) 提升版本、提交、打 tag 并推送）；tag 推送会触发 Release workflow，发布到 VSCode Marketplace（`VSCE_PAT`）与 OpenVSX（`OVSX_PAT`），并用 changelogithub 创建 GitHub Release。
+维护者先在 CHANGELOG.md 补上版本条目，然后运行 `npm run release`（[bumpp](https://github.com/antfu/bumpp) 提升版本、提交、打 tag 并推送）；tag 推送会触发 Release workflow，发布到 VSCode Marketplace（`VSCE_PAT`）与 OpenVSX（`OVSX_PAT`），并用 changelogithub 创建 GitHub Release。`@vscode/vsce`、`ovsx` 不是 devDependencies，workflow 里用 `vpx @vscode/vsce@3.9.2`、`vpx ovsx@1.2.0` 锁住版本运行，升级发布工具时改这两行的版本号。
 
 ## 行为准则
 
