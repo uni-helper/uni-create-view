@@ -56,7 +56,9 @@ export async function generate(options: GenerateOptions): Promise<GenerateResult
 
   // #region 生成模板
   const isIndex = options.nameType === 'index'
-  const filePath = options.directory ? `${names.view}/${isIndex ? 'index' : names.view}.vue` : `${names.view}.vue`
+  const filePath = options.directory
+    ? `${names.view}/${isIndex ? 'index' : names.view}.vue`
+    : `${names.view}.vue`
   const targetPath = path.resolve(options.path, filePath)
   if (fs.existsSync(targetPath)) {
     if (fs.statSync(targetPath).isDirectory())
@@ -94,7 +96,9 @@ export async function writePagesJson(options: GenerateOptions): Promise<Generate
   const projectRoot = path.dirname(pagesJsonFile.path)
   const rootPath = slash(path.relative(projectRoot, searchPath))
   const isIndex = options.nameType === 'index'
-  const filePath = options.directory ? `${names.view}/${isIndex ? 'index' : names.view}` : `${names.view}`
+  const filePath = options.directory
+    ? `${names.view}/${isIndex ? 'index' : names.view}`
+    : `${names.view}`
 
   // 读取 pages.json, 准备 page 信息
   let pagesJson: Record<string, any>
@@ -103,9 +107,14 @@ export async function writePagesJson(options: GenerateOptions): Promise<Generate
   }
   catch (error) {
     // 此时页面文件已写入, 明确告知半成品状态
-    return { status: 'error', message: `页面文件已创建, 但 pages.json 解析失败未写入, 请检查其内容 (${error instanceof Error ? error.message : error})` }
+    return { status: 'error', message: `页面文件已创建, 但 pages.json 解析失败未写入, 请检查其内容 (${error instanceof Error
+      ? error.message
+      : error})` }
   }
-  const page = { path: filePath, style: { navigationBarTitleText: names.page || names.view } }
+  const page = {
+    path: filePath,
+    style: { navigationBarTitleText: names.page || names.view },
+  }
 
   // 如果是分包页面
   if (options.subcontract) {
@@ -133,6 +142,8 @@ export async function writePagesJson(options: GenerateOptions): Promise<Generate
   }
   catch (error) {
     // 此时页面文件已写入, 明确告知半成品状态
-    return { status: 'error', message: `页面文件已创建, 但 pages.json 写入失败未更新 (${error instanceof Error ? error.message : error})` }
+    return { status: 'error', message: `页面文件已创建, 但 pages.json 写入失败未更新 (${error instanceof Error
+      ? error.message
+      : error})` }
   }
 }

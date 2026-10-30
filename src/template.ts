@@ -34,7 +34,9 @@ export function createViewTemplate(options: CreateViewTemplateOptions) {
 
   const handle = (attrs: (string | boolean | undefined)[]) => {
     const _v = attrs.filter(Boolean).join(' ').trim()
-    return _v ? ` ${_v}` : ''
+    return _v
+      ? ` ${_v}`
+      : ''
   }
 
   const scriptAttrs = handle([

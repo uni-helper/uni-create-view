@@ -51,8 +51,12 @@ export function upwardSearchFile(currentPath: string, fileName: string): SearchF
     if (await isFileAccess(recursPath)) {
       const stat = fs.lstatSync(recursPath)
       // 同名目录不作为命中, 继续向上找真正的文件
-      if (stat.isFile())
-        return { path: recursPath, data: fs.readFileSync(recursPath, 'utf-8') }
+      if (stat.isFile()) {
+        return {
+          path: recursPath,
+          data: fs.readFileSync(recursPath, 'utf-8'),
+        }
+      }
     }
     // 递归出口: 已到根路径仍未找到, 停止递归 (path.resolve 在根路径上不再变化)
     const parent = path.resolve(appPath, '../')

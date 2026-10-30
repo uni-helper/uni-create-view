@@ -21,7 +21,9 @@ export function createCommand(options: CreateCommandOptions) {
     const componentText = `输入${options.name}名称`
     const pageText = `${componentText}，空格分隔字段（navigationBarTitleText）`
     // 提示语由 component 标志决定, 与 generate 的页面/组件分流保持同一判据
-    const input = await vscode.window.showInputBox({ prompt: options.options?.component ? componentText : pageText })
+    const input = await vscode.window.showInputBox({
+      prompt: options.options?.component ? componentText : pageText,
+    })
 
     // 用户按 Esc 取消, 静默返回
     if (input === undefined)
@@ -37,7 +39,10 @@ export function createCommand(options: CreateCommandOptions) {
       // 首段为文件名, 其余整体作为 navigationBarTitleText (标题可含空格)
       const [view, ...titleParts] = trimmedInput.split(/\s+/)
       const { message, status } = await generate({
-        names: { view, page: titleParts.join(' ') },
+        names: {
+          view,
+          page: titleParts.join(' '),
+        },
         nameType: getConfiguration('create-uniapp-view.name'),
         path: uri.fsPath,
         component: options.options?.component,
@@ -53,7 +58,9 @@ export function createCommand(options: CreateCommandOptions) {
     }
     catch (error) {
       // 兜底: 生成期异常转为单条提示, 避免 VS Code 的 command failed 弹窗
-      logger('error', error instanceof Error ? error.message : String(error))
+      logger('error', error instanceof Error
+        ? error.message
+        : String(error))
     }
   })
 }
