@@ -14,16 +14,17 @@ jobs:
         with:
           fetch-depth: 0
 
-      - uses: voidzero-dev/setup-vp@v1.21.1
+      - uses: voidzero-dev/setup-vp@v1.22.0
         with:
           cache: true
           run-install: true
 
-      - run: vpx @vscode/vsce publish
+      # 发布工具不再是 devDependencies，vpx 每次从 registry 拉取，必须显式锁版本
+      - run: vpx @vscode/vsce@3.9.2 publish
         env:
           VSCE_PAT: ${{ secrets.VSCE_PAT }}
 
-      - run: vpx ovsx publish
+      - run: vpx ovsx@1.2.0 publish
         env:
           OVSX_PAT: ${{ secrets.OVSX_PAT }}
 
