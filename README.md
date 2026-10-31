@@ -65,7 +65,7 @@
 
 打开 `create-uniapp-view.nvue` 后，生成的文件后缀是 `.nvue`，内容换成 nvue 模板。`pages.json` 里的 `path` 和 vue 页面一样不带扩展名，注册逻辑没有区别。
 
-nvue 是 App 端的原生渲染，写法和 vue 页面有几处硬性差异：只有 flex 布局，`view` 默认宽高为 0，文字必须放在 `text` 里才能显示，字体大小和颜色只能设在 `text` 上。内置的 nvue 模板按这些规则写了一份能直接看见内容的骨架，用选项式写法，`vue2` 和 `vue3` 都能跑，所以不会带 `<script setup>`。
+nvue 是 App 端的原生渲染，写法和 vue 页面有几处硬性差异：只有 flex 布局，`view` 默认宽高为 0，文字必须放在 `text` 里才能显示，字体大小和颜色只能设在 `text` 上。内置的 nvue 模板按这几条规则写了一份骨架：文字包在 `text` 里，根节点用 `flex: 1` 撑开并设了背景色，样式挂在固定的 `page-root` / `component-root` class 上（不用你输入的名称拼选择器）。脚本是选项式写法，`vue2` 和 `vue3` 都能跑，所以不会带 `<script setup>`。
 
 想要别的 nvue 骨架就用自定义模板，它优先于 nvue 模板，`.nvue` 后缀仍然生效。
 

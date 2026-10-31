@@ -5,6 +5,7 @@ import slash from 'slash'
 import { resolveSubPackage } from './subpackage'
 import { createViewTemplate } from './template'
 import { confirmOverwrite, isDirectory, upwardSearchFile } from './utils'
+import { viewPath } from './view-path'
 
 export interface GenerateOptions {
   /** 创建路径 */
@@ -61,12 +62,9 @@ export async function generate(options: GenerateOptions): Promise<GenerateResult
   // #endregion
 
   // #region 生成模板
-  const isIndex = options.nameType === 'index'
-  // pages.json 里的 path 不带扩展名, 所以只有文件名需要跟着 nvue 变
-  const extension = options.nvue ? 'nvue' : 'vue'
-  const filePath = options.directory
-    ? `${names.view}/${isIndex ? 'index' : names.view}.${extension}`
-    : `${names.view}.${extension}`
+  // 扩展名只影响文件名: pages.json 里的 path 不带扩展名, nvue 也不需要变
+  const relativePath = viewPath({ view: names.view, directory: options.directory, isIndex: options.nameType === 'index' })
+  const filePath = `${relativePath}.${options.nvue ? 'nvue' : 'vue'}`
   const targetPath = path.resolve(options.path, filePath)
   // 渲染提前到建目录/写文件之前: 模板缺失或 ejs 语法错误时不应留下目录或文件
   const template = createViewTemplate({ name: names.view, ...options })
@@ -113,10 +111,7 @@ export async function writePagesJson(options: GenerateOptions): Promise<Generate
   // (字符串 replace 依赖右键路径包含项目根前缀, 恰好相等时无匹配而 no-op, 会把绝对路径写进 pages.json)
   const projectRoot = path.dirname(pagesJsonFile.path)
   const rootPath = slash(path.relative(projectRoot, searchPath))
-  const isIndex = options.nameType === 'index'
-  const filePath = options.directory
-    ? `${names.view}/${isIndex ? 'index' : names.view}`
-    : `${names.view}`
+  const filePath = viewPath({ view: names.view, directory: options.directory, isIndex: options.nameType === 'index' })
 
   // 读取 pages.json, 准备 page 信息
   let pagesJson: Record<string, any>

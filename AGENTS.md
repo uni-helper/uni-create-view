@@ -48,7 +48,9 @@ npm run release      # bumpp：提版本号、提交、打 tag 并推送; v* tag
 - 自定义模板整份接管：设了 `customPageTemplate` / `customComponentTemplate` 就只读那份文件，`template` 被忽略、也不再校验它的合法性（非法值不再报错）。文件不存在或指向目录时报错并带出路径。
 - 渲染模板与覆盖确认都必须发生在建目录之前：模板文件缺失、ejs 标签写错、用户在覆盖对话框点取消，三种情况都不应在磁盘上留下空目录。
 - 资源级配置（`scope: "resource"`，目前是 `customPageTemplate` / `customComponentTemplate`）必须带 scope 读：`getConfiguration(section, uri)`。不传 scope 时 `workspace.getConfiguration()` 读不到按文件夹设置的值。
-- nvue（`create-uniapp-view.nvue`）只换文件名后缀成 `.nvue` 并改用 nvue 模板，`pages.json` 里的 `path` 不带扩展名，因此写 `pages.json` 的逻辑不用改。nvue 是原生渲染，只有 flex 布局、`view` 默认宽高为 0、文字必须放在 `text` 里，所以不能复用 vue 模板；两份 nvue 模板用选项式写法（vue2 / vue3 都能跑），`scriptAttrs` 里必须去掉 `setup`。
+- nvue（`create-uniapp-view.nvue`）只换文件名后缀成 `.nvue` 并改用 nvue 模板，`pages.json` 里的 `path` 不带扩展名，因此写 `pages.json` 的逻辑不用改。nvue 是原生渲染，只有 flex 布局、`view` 默认宽高为 0、文字必须放在 `text` 里，所以不能复用 vue 模板；两份 nvue 模板用选项式写法（vue2 / vue3 都能跑），此时 `scriptAttrs` 里必须去掉 `setup`（只用 `useNvueTemplate` 判定，自定义模板不受影响）。
+- 文件名与页面路径统一由 `src/view-path.ts` 的 `viewPath` 算：`.vue` / `.nvue` 文件路径是它加扩展名，写进 `pages.json` 的是它本身。两处各算一遍曾经漂移过。
+- nvue 模板的根节点样式挂在固定 class（`page-root` / `component-root`）上，不能用用户输入的名称拼选择器：`2fa` 拼出来是非法选择器，规则会被丢掉，页面变空白。
 - `template.ts` 对空值和非法值的处理不同：空值回落到 `vue3`，非空但未知的名字抛错。手改 `settings.json` 能绕过 enum 约束，这个抛错是有意为之。设了自定义模板时这个校验不再触发（见上一条），但 `vue3` 仍然参与 `scriptAttrs` 里 `setup` 的判断。
 
 ## 约定

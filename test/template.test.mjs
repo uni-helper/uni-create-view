@@ -121,3 +121,24 @@ test('nvue: 自定义模板仍然优先', () => {
   const file = fixture('nvue-custom.txt', '<view>custom</view>')
   assert.equal(createViewTemplate({ nvue: true, customTemplate: file, name: 'demo' }), '<view>custom</view>')
 })
+
+test('nvue: 根节点样式用固定 class, 不用用户输入拼选择器', () => {
+  // 名称以数字开头时 .2fa 是非法选择器, 整条规则会被丢掉
+  const output = createViewTemplate({ nvue: true, name: '2fa', typescript: true })
+  assert.match(output, /\.page-root \{/)
+  assert.doesNotMatch(output, /\.2fa/)
+})
+
+test('nvue: 自定义模板仍然拿到 setup 属性', () => {
+  // nvue 只牵制内置模板, 用户文件要不要 setup 由它自己决定
+  const file = fixture('nvue-custom-setup.txt', '<script<%- options.scriptAttrs %>></script>')
+  const output = createViewTemplate({
+    nvue: true,
+    customTemplate: file,
+    name: 'demo',
+    template: 'vue3',
+    setup: true,
+    typescript: true,
+  })
+  assert.equal(output, '<script lang="ts" setup></script>')
+})
