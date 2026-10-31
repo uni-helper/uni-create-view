@@ -19,10 +19,7 @@ jobs:
           cache: true
           run-install: true
 
-      # 发布工具不再是 devDependencies，vpx 每次从 registry 拉取，必须显式锁版本
-      - run: vpx @vscode/vsce@3.9.2 publish
-        env:
-          VSCE_PAT: ${{ secrets.VSCE_PAT }}
+      - run: vpx @vscode/vsce publish --oidc
 
       - run: vpx ovsx@1.2.0 publish
         env:
