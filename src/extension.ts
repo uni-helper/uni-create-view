@@ -8,7 +8,7 @@ export function activate(context: vscode.ExtensionContext) {
       command: 'create-uniapp-view.createPage',
     }),
     createCommand({
-      name: '页面',
+      name: '分包页面',
       options: { subcontract: true },
       command: 'create-uniapp-view.createSubcontractPage',
     }),
