@@ -54,6 +54,8 @@
 
 `^1.3.0` 新增功能，用于创建分包页面，并自动添加至 `subPackages` 字段中。
 
+右键的目录就是这条分包的 `root`。如果该目录已经在某个已有分包里面，插件会复用那个分包，把页面写成相对它的路径，不会再建一条嵌套的 `root`。分包页面不能建在 `pages.json` 所在的根目录上，那种情况会直接报错。
+
 > 注意：`cli` 创建的项目若遇 vendor.js 过大，可以在 `package.json` 中添加参数 `--minimize`，具体参考官方文档：[dcloud.io](https://uniapp.dcloud.io/collocation/pages?id=subpackages)
 
 ![分包页面演示：创建分包页面并写入 subPackages](./public/subpackage-demo.gif)

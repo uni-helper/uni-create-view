@@ -2,6 +2,7 @@ import fs from 'node:fs'
 import path from 'node:path'
 import * as JSONC from 'comment-json'
 import slash from 'slash'
+import { resolveSubPackage } from './subpackage'
 import { createViewTemplate } from './template'
 import { confirmOverwrite, isDirectory, upwardSearchFile } from './utils'
 
@@ -44,6 +45,10 @@ export async function generate(options: GenerateOptions): Promise<GenerateResult
   // #region 判断路径是否存在 / 符合创建环境
   if (!isDirectory(options.path))
     return { status: 'error', message: '创建错误, 该路径不是文件夹' }
+
+  // 分包 root 是右键目录相对 pages.json 所在目录的路径, 右键目录就是项目根时 root 会是空串
+  if (options.subcontract && fs.existsSync(path.resolve(options.path, 'pages.json')))
+    return { status: 'error', message: '创建错误, 分包页面要建在子目录里, 请在 pages.json 所在目录的子目录上右键' }
 
   if (options.directory) {
     if (isDirectory(directoryPath))
@@ -128,14 +133,18 @@ export async function writePagesJson(options: GenerateOptions): Promise<Generate
   // 如果是分包页面
   if (options.subcontract) {
     pagesJson.subPackages = pagesJson.subPackages || []
-    const findRoot = pagesJson.subPackages.find((v: any) => v.root === rootPath)
+    const resolution = resolveSubPackage(pagesJson.subPackages, rootPath)
+    if (!resolution.ok)
+      return { status: 'error', message: `页面文件已创建, 但${resolution.message}` }
+    const { subPackage, isNew } = resolution
+    // 页面路径必须相对分包 root: 沿用了上级分包时要带上子目录前缀
+    page.path = slash(path.relative(resolution.rootPath, `${rootPath}/${page.path}`))
     // 已有同 path 条目时不重复追加, 避免反复创建把 pages.json 写脏
-    if (findRoot?.pages.some((v: any) => v.path === page.path))
+    if (subPackage.pages.some((v: any) => v.path === page.path))
       return { status: 'warning', message: '创建页面成功! 但pages.json已存在该页面条目, 未重复写入' }
-    const root = findRoot || { root: rootPath, pages: [] }
-    root.pages.push(page)
-    if (!findRoot)
-      pagesJson.subPackages.push(root)
+    subPackage.pages.push(page)
+    if (isNew)
+      pagesJson.subPackages.push(subPackage)
   }
   else {
     pagesJson.pages = pagesJson.pages || []

@@ -40,6 +40,7 @@ npm run release      # bumpp：提版本号、提交、打 tag 并推送; v* tag
 
 - 写进 `pages.json` 的页面路径以 `pages.json` 所在目录为基准，用 `path.relative` 算，不能用右键目录的绝对路径，也不能用字符串 `replace`。右键目录正好是项目根时 `replace` 匹配不到、变成空操作，会把绝对路径写进 `pages.json`（2.2.0 修过）。
 - 已存在的页面条目不重复追加。
+- 分包 root 取右键目录相对 `pages.json` 所在目录的路径，规则在 `src/subpackage.ts`：已有分包 root 覆盖该目录时沿用它（取最长匹配），页面 `path` 写成相对它的形式，不再新建嵌套 root；没有覆盖就新建一条。root 为空（右键目录就是项目根）直接报错，不写 `pages.json`。
 - `.vue` 文件已写入但 `pages.json` 解析或写入失败时，提示必须说明这是半成品状态，因为页面文件存在却没有注册。
 - 建目录用同步的 `mkdirSync`。异步 mkdir 会和 `writeFileSync` 抢时序，偶发失败（2.2.0 修过）。
 - `upwardSearchFile` 从右键目录往上找，到文件系统根停止；同名目录不算命中（有 lstat 判断）。
