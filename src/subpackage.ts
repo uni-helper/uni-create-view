@@ -61,6 +61,12 @@ export function resolveSubPackage(
     }
   }
 
+  // 反过来：右键目录里已经有一条更深的 root。再建父级分包会让两个 root 互相包含，
+  // 页面文件只属于外层，分包归属是错的。合并方向得人来定，不替用户改已有条目
+  const nested = subPackages.find(v => typeof v.root === 'string' && v.root.startsWith(`${rootPath}/`))
+  if (nested)
+    return { ok: false, message: `该目录里已有分包 root: ${nested.root}, 再建父级分包会让两个 root 互相嵌套, 请先把 pages.json 里的这两条分包合并` }
+
   return {
     ok: true,
     subPackage: { root: rootPath, pages: [] },

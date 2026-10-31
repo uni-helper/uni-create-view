@@ -72,3 +72,20 @@ test('分包 root: 已有条目缺 pages 字段时补空数组', () => {
   assert.equal(result.ok, true)
   assert.deepEqual(result.subPackage.pages, [])
 })
+
+test('分包 root: 目录里已有更深的 root 时拒绝新建父级分包', () => {
+  // 已有 pages/subA/foo 时再在 pages/subA 建分包，两个 root 会互相包含
+  const result = resolveSubPackage([
+    { root: 'pages/subA/foo', pages: [] },
+  ], 'pages/subA')
+  assert.equal(result.ok, false)
+  assert.match(result.message, /pages\/subA\/foo/)
+})
+
+test('分包 root: 更深的 root 不影响上级之外的目录', () => {
+  const result = resolveSubPackage([
+    { root: 'pages/subA/foo', pages: [] },
+  ], 'pages/subB')
+  assert.equal(result.ok, true)
+  assert.equal(result.rootPath, 'pages/subB')
+})
