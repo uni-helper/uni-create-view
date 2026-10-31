@@ -148,6 +148,7 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "watch": "tsc -watch",
+    "test": "npm run compile && node --test test/",
     "release": "bumpp --all",
     "typecheck": "tsc --noEmit"
   },

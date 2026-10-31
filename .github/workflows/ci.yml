@@ -36,3 +36,6 @@ jobs:
 
       - name: Compile
         run: vpr compile
+
+      - name: Test
+        run: vpr test
