@@ -26,6 +26,7 @@
 - 📁 创建页面、分包页面，自动向上查找 `pages.json` 并写入
 - 📦 可深度目录创建，写入 `pages.json` 后仍可保留注释
 - ✨ 可配置 `vue2 | vue3 | composition-api(vue2)` 模板，`vue3` 支持 `<script setup>`
+- 🎨 支持用自己写的模板文件替代内置模板（页面与组件各一份）
 - 👕 可配置 `css | scss | less | stylus | sass` 预处理器类型
 - 🦾 `typescript` 为默认开发语言（可在设置中关闭）
 
@@ -40,14 +41,14 @@
 右键文件夹打开菜单选择创建类型，可选择创建组件、页面、分包页面，空格分隔视图名称与页面名称（`navigationBarTitleText`）。
 
 <p align="center">
-<img src="./public/basic.gif" alt="基本使用演示: 右键文件夹创建页面与组件" width="786" />
+<img src="./public/basic.gif" alt="基本使用演示：右键文件夹创建页面与组件" width="786" />
 </p>
 
 ### 深度目录
 
 `^1.3.0` 新增扩展能力，无特殊需求还是建议使用单文件模式。
 
-![深度目录演示: 创建多层目录页面](./public/directory-demo.gif)
+![深度目录演示：创建多层目录页面](./public/directory-demo.gif)
 
 ### 分包页面
 
@@ -55,7 +56,59 @@
 
 > 注意：`cli` 创建的项目若遇 vendor.js 过大，可以在 `package.json` 中添加参数 `--minimize`，具体参考官方文档：[dcloud.io](https://uniapp.dcloud.io/collocation/pages?id=subpackages)
 
-![分包页面演示: 创建分包页面并写入 subPackages](./public/subpackage-demo.gif)
+![分包页面演示：创建分包页面并写入 subPackages](./public/subpackage-demo.gif)
+
+## 自定义模板
+
+不想用内置模板时，把模板写成一个普通文件，再用设置告诉插件它在哪：
+
+```jsonc
+// .vscode/settings.json
+{
+  "create-uniapp-view.customPageTemplate": "templates/page.vue",
+  "create-uniapp-view.customComponentTemplate": "templates/component.vue"
+}
+```
+
+相对路径以工作区根目录为基准，所以模板文件可以提交进仓库、跟着项目走；也可以填绝对路径。
+
+模板文件是普通的 `.vue` 文本，插件用 [ejs](https://ejs.co/) 渲染，只有想插入变量时才需要写标签：
+
+```vue
+<script setup lang="ts">
+</script>
+
+<template>
+  <view class="<%= options.name %>"><%= options.name %></view>
+</template>
+
+<style scoped></style>
+```
+
+可用的变量：
+
+| 变量 | 含义 |
+| --- | --- |
+| `<%= options.name %>` | 输入框里的视图名称 |
+| `<%= options.typescript %>` | `create-uniapp-view.typescript` 的布尔值 |
+| `<%= options.setup %>` | `create-uniapp-view.setup` 的布尔值 |
+| `<%- options.scriptAttrs %>` | `<script ...>` 的属性片段，例如 ` lang="ts" setup` |
+| `<%- options.styleAttrs %>` | `<style ...>` 的属性片段，例如 ` lang="scss" scoped` |
+
+`scriptAttrs` / `styleAttrs` 自带前导空格，直接写成 `<script<%- options.scriptAttrs %>>`。其中 `setup` 只在 `create-uniapp-view.template` 为 `vue3` 时出现，所以想复用这两个片段的 `vue3` 项目要把 `template` 保持在 `vue3`。
+
+行为说明：
+
+- 设了自定义模板，`create-uniapp-view.template` 就被整份忽略（填了非法值也不会报错）；`typescript` / `style` / `scoped` / `setup` 只通过上面两个属性片段间接生效；`directory` 与 `name` 照常起作用。
+- 模板文件不存在、或 ejs 标签写错时，插件报错并中止，不会创建目录，也不会写入 `pages.json`。
+- ejs 会把文件里的 `<%` 当作标签，普通 Vue 模板里不会出现这个序列；万一需要输出字面量，用 `<%%`。
+
+### 从用户代码片段迁移
+
+插件读取的是普通文本文件，不是 VSCode 的 snippets。把片段里的 `body` 数组合并成文件，再做两处替换即可：
+
+- `${1:占位文字}` → `占位文字`（或者直接删掉这段占位）
+- `${TM_FILENAME_BASE}` → `<%= options.name %>`
 
 ## 扩展设置
 
@@ -70,6 +123,8 @@
 | `create-uniapp-view.scoped` | `true` | 创建模板时，是否使用 `<style scoped>` |
 | `create-uniapp-view.setup` | `true` | 创建 vue3 模板时，是否使用 `<script setup>` |
 | `create-uniapp-view.template` | `vue3` | 选择创建的模板，可选 `vue2`、`vue3`、`composition-api(vue2)` |
+| `create-uniapp-view.customPageTemplate` | 空 | 自定义页面模板文件的路径，相对路径以工作区根为基准；留空则使用内置模板。设置后忽略 `template` |
+| `create-uniapp-view.customComponentTemplate` | 空 | 自定义组件模板文件的路径，相对路径以工作区根为基准；留空则使用内置模板。设置后忽略 `template` |
 
 ## 命令
 

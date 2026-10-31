@@ -5,7 +5,8 @@ uni-app 的 VS Code 扩展：在资源管理器里右键文件夹，快速生成
 ## 项目
 
 - **语言与运行时**：TypeScript（strict、target ES2020、CommonJS），用 `tsc` 直接编译到 `out/`，没有打包步骤（esbuild 在 2.2.0 移除）。`comment-json`、`ejs`、`slash` 三个运行时依赖靠 `files` 里的 `node_modules` 一起打进 VSIX，新增运行时依赖前先看包体积。
-- **工具链**：npm，`package.json` 的 `packageManager` 固定为 `npm@12.2.1`，`package-lock.json` 入库（已从 pnpm 迁移）。本地 Node 版本看 `.node-version`（26），CI 覆盖 22 / 24 / 26。ESLint 10 用 flat config，配置源是 `eslint.config.mjs` 里的 `@antfu/eslint-config`，忽略 `out`、`dist`、`**/*.d.ts`。发版用 bumpp。仓库没有测试框架，CI（`.github/workflows/ci.yml`，`voidzero-dev/setup-vp@v1.22.0`）只跑 `vpr lint` 和 `vpr compile`，矩阵为 Node 22 / 24 / 26 × ubuntu / macos / windows。对使用者的版本要求只有 `engines.vscode: ^1.137.0`。
+- **工具链**：npm，`package.json` 的 `packageManager` 固定为 `npm@12.2.1`，`package-lock.json` 入库（已从 pnpm 迁移）。本地 Node 版本看 `.node-version`（26），CI 覆盖 22 / 24 / 26。ESLint 10 用 flat config，配置源是 `eslint.config.mjs` 里的 `@antfu/eslint-config`，忽略 `out`、`dist`、`**/*.d.ts`。发版用 bumpp。CI（`.github/workflows/ci.yml`，`voidzero-dev/setup-vp@v1.22.0`）跑 `vpr lint`、`vpr compile`、`npm test`，矩阵为 Node 22 / 24 / 26 × ubuntu / macos / windows。对使用者的版本要求只有 `engines.vscode: ^1.137.0`。
+- **测试**：用 Node 自带的 `node:test`，没有测试依赖。2026-09 的 `chore: remove unused dependencies and dead test infrastructure` 删过旧的一套：`npm test` 指向 `out/test/runTest.js`，而仓库历史里从没有过这个源文件。用例放 `test/`，从 `out/` 导入编译结果，所以必须先编译，`npm test` 已经包含这一步。`src/utils.ts` 依赖 `vscode`，在扩展宿主外加载不了，因此用例只覆盖不依赖 `vscode` 的模块（目前是 `src/template.ts`）。`generate.ts` 的写盘顺序靠 F5 手工验证。`eslint.config.mjs` 对 `test/**` 关掉了 `test/no-import-node-test`，它默认要求用 vitest。
 - **产物**：VSIX 包含 `CHANGELOG.md`、`LICENSE`、`node_modules`、`out`、`public`（见 `files` 与 `icon`）。推 `v*` tag 触发发布，同时上架 VS Code Marketplace 与 OpenVSX。
 
 ## 常用命令
@@ -15,9 +16,10 @@ npm install
 npm run compile      # tsc → out/
 npm run watch        # tsc -watch; F5「运行扩展」用它作为 preLaunchTask
 npm run typecheck    # tsc --noEmit
+npm test             # 先 tsc 再 node --test test/
 npm run lint         # eslint .
 npm run lint:fix
-npm run release      # bumpp — 提版本号、提交、打 tag 并推送; v* tag 触发 .github/workflows/release.yml
+npm run release      # bumpp：提版本号、提交、打 tag 并推送; v* tag 触发 .github/workflows/release.yml
 ```
 
 发布流程：`vpx @vscode/vsce@3.9.2 publish`（VSCE_PAT）→ `vpx ovsx@1.2.0 publish`（OVSX_PAT）→ changelogithub 创建 GitHub Release（GITHUB_TOKEN）。`@vscode/vsce` 和 `ovsx` 不在 devDependencies 里，`vpx` 会从 registry 拉取，所以版本号写死在 workflow 里。
@@ -27,11 +29,12 @@ npm run release      # bumpp — 提版本号、提交、打 tag 并推送; v* t
 | 文件 | 职责 |
 |---|---|
 | `src/extension.ts` | 入口，注册三个命令 |
-| `src/command.ts` | 命令封装：拦住没有 URI 的情况（从命令面板调用时提示右键），弹输入框，拆分输入，把生成阶段的异常统一转成提示 |
-| `src/generate.ts` | 主流程：校验目标目录，`directory` 打开时同步建目录，写入 `.vue`（覆盖前弹模态确认），再调 `writePagesJson` |
-| `src/utils.ts` | `logger`（面向用户的消息框）、`getConfiguration`（读带 `create-uniapp-view.` 前缀的完整 key）、`confirmOverwrite`（模态框，关闭或按 Esc 视为拒绝）、`upwardSearchFile` |
-| `src/template.ts` | 按 `template` × `component` 从六份模板里选一份，用 ejs 渲染；模板名未知时抛错 |
+| `src/command.ts` | 命令封装：拦住没有 URI 的情况（从命令面板调用时提示右键），弹输入框，拆分输入，带 scope 读配置并把模板路径解析成绝对路径，把生成阶段的异常统一转成提示 |
+| `src/generate.ts` | 主流程：校验目标目录，渲染模板，覆盖前弹模态确认，建目录（`directory` 打开时）并写入 `.vue`，再调 `writePagesJson` |
+| `src/utils.ts` | `logger`（面向用户的消息框）、`getConfiguration`（读带 `create-uniapp-view.` 前缀的完整 key，支持传 scope）、`resolveWorkspacePath`（把配置里的相对路径按工作区根解析）、`confirmOverwrite`（模态框，关闭或按 Esc 视为拒绝）、`upwardSearchFile` |
+| `src/template.ts` | 模板来源：设了 `customPageTemplate` / `customComponentTemplate` 就读那份用户文件，否则按 `template` × `component` 从六份内置模板里选一份；都走 ejs 渲染；模板名未知时抛错 |
 | `src/templates/*.ts` | 六份 ejs 模板字符串：页面 / 组件 × vue2 / vue3 / composition-api |
+| `test/template.test.mjs` | `node:test` 用例：自定义模板分支、`template` 优先级、报错文案、内置模板无行尾空格。从 `out/` 导入，跑之前必须先编译 |
 
 ### 行为约束（不要改坏）
 
@@ -41,7 +44,10 @@ npm run release      # bumpp — 提版本号、提交、打 tag 并推送; v* t
 - 建目录用同步的 `mkdirSync`。异步 mkdir 会和 `writeFileSync` 抢时序，偶发失败（2.2.0 修过）。
 - `upwardSearchFile` 从右键目录往上找，到文件系统根停止；同名目录不算命中（有 lstat 判断）。
 - 输入按空白拆分：第一段是文件或文件夹名，其余拼起来作为 `navigationBarTitleText`（标题可以带空格）。按 Esc 是静默取消；输入为空或全是空白时报错并中止。
-- `template.ts` 对空值和非法值的处理不同：空值回落到 `vue3`，非空但未知的名字抛错。手改 `settings.json` 能绕过 enum 约束，这个抛错是有意为之。
+- 自定义模板整份接管：设了 `customPageTemplate` / `customComponentTemplate` 就只读那份文件，`template` 被忽略、也不再校验它的合法性（非法值不再报错）。文件不存在或指向目录时报错并带出路径。
+- 渲染模板与覆盖确认都必须发生在建目录之前：模板文件缺失、ejs 标签写错、用户在覆盖对话框点取消，三种情况都不应在磁盘上留下空目录。
+- 资源级配置（`scope: "resource"`，目前是 `customPageTemplate` / `customComponentTemplate`）必须带 scope 读：`getConfiguration(section, uri)`。不传 scope 时 `workspace.getConfiguration()` 读不到按文件夹设置的值。
+- `template.ts` 对空值和非法值的处理不同：空值回落到 `vue3`，非空但未知的名字抛错。手改 `settings.json` 能绕过 enum 约束，这个抛错是有意为之。设了自定义模板时这个校验不再触发（见上一条），但 `vue3` 仍然参与 `scriptAttrs` 里 `setup` 的判断。
 
 ## 约定
 

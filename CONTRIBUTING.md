@@ -15,18 +15,19 @@
 uni-create-view/
 ├── src/
 │   ├── extension.ts          # 插件入口，注册三个命令
-│   ├── command.ts            # 命令实现：输入框、名称与标题拆分、错误转提示
+│   ├── command.ts            # 命令实现：输入框、名称与标题拆分、读配置、错误转提示
 │   ├── generate.ts           # 核心逻辑：创建 .vue 文件、向上查找并写入 pages.json（含分包）
-│   ├── template.ts           # 模板选择与 ejs 渲染
-│   ├── templates/            # 六份模板：页面/组件 × vue2/vue3/composition-api
+│   ├── template.ts           # 模板来源：自定义模板文件或内置模板，ejs 渲染
+│   ├── templates/            # 六份内置模板：页面/组件 × vue2/vue3/composition-api
 │   └── utils.ts              # 向上查找文件、覆盖确认、日志提示等工具
+├── test/                     # node:test 用例，从 out/ 导入编译结果
 ├── public/                   # banner、logo 与 README 演示动图，随 vsix 打包
 ├── .github/workflows/        # CI 与发布流程
 ├── package.json              # 插件清单：contributes 声明配置项、命令、右键菜单
 └── ...
 ```
 
-`out/` 是 `tsc` 的编译产物（已 gitignore，但会随 vsix 打包），不要手改。
+`out/` 是 `tsc` 的编译产物（已 gitignore，但会随 vsix 打包），不要手改。`test/` 不进 vsix。
 
 ## 本地开发
 
@@ -42,17 +43,23 @@ npm run compile
 
 ## 测试与检查
 
-本仓库没有自动化测试，提交前请执行：
+提交前请执行：
 
 ```bash
 npm run lint         # ESLint（@antfu/eslint-config flat config）
 npm run typecheck    # tsc --noEmit
-npm run compile      # 确认能编译出 out/
+npm test             # 先 tsc 再 node --test test/
 ```
 
 ### 测试说明
 
-- 涉及生成逻辑的改动，建议在扩展开发宿主里实际创建一次页面 / 组件 / 分包页面，检查 `.vue` 文件内容与 `pages.json` 的写入结果。
+- 测试用 Node 自带的 `node:test`，没有额外测试依赖。文件放在 `test/`，后缀 `.test.mjs`，从 `out/` 导入编译结果，所以必须先编译（`npm test` 已经包含编译步骤）。
+- `src/utils.ts` 依赖 `vscode` 模块，在扩展宿主外无法加载，所以自动化测试只覆盖不依赖 `vscode` 的模块。`getConfiguration` / `resolveWorkspacePath` 这类带 `vscode` 依赖的逻辑，仍靠下面的手工验证。
+- 新加的分支、边界条件建议直接补一条 `test/` 里的用例；写完后把被测逻辑改坏一次，确认用例真的会失败。
+
+#### 手工验证
+
+- 涉及生成逻辑的改动，在扩展开发宿主里实际创建一次页面 / 组件 / 分包页面，检查 `.vue` 文件内容与 `pages.json` 的写入结果。
 - 重点验证：已有 `pages.json` 中的注释不被破坏、重复创建不会写入重复条目、右键项目根目录时写入的是相对路径。
 
 ## 提交规范
@@ -64,7 +71,7 @@ npm run compile      # 确认能编译出 out/
    ```bash
    npm run lint
    npm run typecheck
-   npm run compile
+   npm test
    ```
 5. 推送到远端后发起 Pull Request，描述改动内容与关联 Issue。
 
@@ -72,7 +79,7 @@ npm run compile      # 确认能编译出 out/
 
 - 保持 PR 范围聚焦，一次只解决一个问题。
 - 新增或修改配置项、命令时，同步更新 `package.json` 的 `contributes` 与 README 的「扩展设置」「命令」两节。
-- 确保 CI 通过（CI 会在 Node 22/24/26 × Linux/macOS/Windows 上执行 lint 和 compile）。
+- 确保 CI 通过（CI 会在 Node 22/24/26 × Linux/macOS/Windows 上执行 lint、compile 和 `npm test`）。
 - 如需讨论方案，可在 Issue 中先行沟通。
 
 ## 发布
