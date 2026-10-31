@@ -6,7 +6,7 @@ uni-app 的 VS Code 扩展：在资源管理器里右键文件夹，快速生成
 
 - **语言与运行时**：TypeScript（strict、target ES2020、CommonJS），用 `tsc` 直接编译到 `out/`，没有打包步骤（esbuild 在 2.2.0 移除）。`comment-json`、`ejs`、`slash` 三个运行时依赖靠 `files` 里的 `node_modules` 一起打进 VSIX，新增运行时依赖前先看包体积。
 - **工具链**：npm，`package.json` 的 `packageManager` 固定为 `npm@12.2.1`，`package-lock.json` 入库（已从 pnpm 迁移）。本地 Node 版本看 `.node-version`（26），CI 覆盖 22 / 24 / 26。ESLint 10 用 flat config，配置源是 `eslint.config.mjs` 里的 `@antfu/eslint-config`，忽略 `out`、`dist`、`**/*.d.ts`。发版用 bumpp。CI（`.github/workflows/ci.yml`，`voidzero-dev/setup-vp@v1.22.0`）跑 `vpr lint`、`vpr compile`、`npm test`，矩阵为 Node 22 / 24 / 26 × ubuntu / macos / windows。对使用者的版本要求只有 `engines.vscode: ^1.137.0`。
-- **测试**：用 Node 自带的 `node:test`，没有测试依赖。2026-09 的 `chore: remove unused dependencies and dead test infrastructure` 删过旧的一套：`npm test` 指向 `out/test/runTest.js`，而仓库历史里从没有过这个源文件。用例放 `test/`，从 `out/` 导入编译结果，所以必须先编译，`npm test` 已经包含这一步。`src/utils.ts` 依赖 `vscode`，在扩展宿主外加载不了，因此用例只覆盖不依赖 `vscode` 的模块（目前是 `src/template.ts`）。`generate.ts` 的写盘顺序靠 F5 手工验证。`eslint.config.mjs` 对 `test/**` 关掉了 `test/no-import-node-test`，它默认要求用 vitest。
+- **测试**：用 Node 自带的 `node:test`，没有测试依赖。2026-09 的 `chore: remove unused dependencies and dead test infrastructure` 删过旧的一套：`npm test` 指向 `out/test/runTest.js`，而仓库历史里从没有过这个源文件。用例放 `test/`，从 `out/` 导入编译结果，所以必须先编译，`npm test` 已经包含这一步。`node --test` 不带路径参数，靠默认发现扫 `test/`：Node 22 / 24 会把路径参数当成测试文件去 require，传 `test/` 会直接报 `Cannot find module`。`src/utils.ts` 依赖 `vscode`，在扩展宿主外加载不了，因此用例只覆盖不依赖 `vscode` 的模块（目前是 `src/template.ts`）。`generate.ts` 的写盘顺序靠 F5 手工验证。`eslint.config.mjs` 对 `test/**` 关掉了 `test/no-import-node-test`，它默认要求用 vitest。
 - **产物**：VSIX 包含 `CHANGELOG.md`、`LICENSE`、`node_modules`、`out`、`public`（见 `files` 与 `icon`）。推 `v*` tag 触发发布，同时上架 VS Code Marketplace 与 OpenVSX。
 
 ## 常用命令
@@ -16,7 +16,7 @@ npm install
 npm run compile      # tsc → out/
 npm run watch        # tsc -watch; F5「运行扩展」用它作为 preLaunchTask
 npm run typecheck    # tsc --noEmit
-npm test             # 先 tsc 再 node --test test/
+npm test             # 先 tsc 再 node --test
 npm run lint         # eslint .
 npm run lint:fix
 npm run release      # bumpp：提版本号、提交、打 tag 并推送; v* tag 触发 .github/workflows/release.yml

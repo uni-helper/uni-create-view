@@ -48,12 +48,13 @@ npm run compile
 ```bash
 npm run lint         # ESLint（@antfu/eslint-config flat config）
 npm run typecheck    # tsc --noEmit
-npm test             # 先 tsc 再 node --test test/
+npm test             # 先 tsc 再 node --test
 ```
 
 ### 测试说明
 
 - 测试用 Node 自带的 `node:test`，没有额外测试依赖。文件放在 `test/`，后缀 `.test.mjs`，从 `out/` 导入编译结果，所以必须先编译（`npm test` 已经包含编译步骤）。
+- 脚本里 `node --test` 不带路径参数，靠 Node 的默认发现扫 `test/`。Node 22 / 24 不接受目录参数，写成 `node --test test/` 会报 `Cannot find module .../test`。
 - `src/utils.ts` 依赖 `vscode` 模块，在扩展宿主外无法加载，所以自动化测试只覆盖不依赖 `vscode` 的模块。`getConfiguration` / `resolveWorkspacePath` 这类带 `vscode` 依赖的逻辑，仍靠下面的手工验证。
 - 新加的分支、边界条件建议直接补一条 `test/` 里的用例；写完后把被测逻辑改坏一次，确认用例真的会失败。
 
