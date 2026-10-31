@@ -3,6 +3,8 @@ import * as ejs from 'ejs'
 import cv2c from './templates/component-composition'
 import cv2 from './templates/component-vue2'
 import cv3 from './templates/component-vue3'
+import nvueComponent from './templates/nvue-component'
+import nvuePage from './templates/nvue-page'
 import pv2c from './templates/page-composition'
 import pv2 from './templates/page-vue2'
 import pv3 from './templates/page-vue3'
@@ -14,6 +16,12 @@ const ALL_TEMPLATES: Record<string, { page: string, component: string }> = {
   'composition-api(vue2)': { page: pv2c, component: cv2c },
 }
 
+// nvue 只有两份模板 (页面 / 组件), 用选项式写法, vue2 与 vue3 都能跑
+const NVUE_TEMPLATES: { page: string, component: string } = {
+  page: nvuePage,
+  component: nvueComponent,
+}
+
 export interface CreateViewTemplateOptions {
   template?: string
   name?: string
@@ -22,6 +30,8 @@ export interface CreateViewTemplateOptions {
   component?: boolean
   setup?: boolean
   scoped?: boolean
+  /** 生成 nvue 模板, 并让调用方把扩展名换成 .nvue */
+  nvue?: boolean
   /** 自定义模板文件的绝对路径，设置后整份接管，忽略 template */
   customTemplate?: string
 }
@@ -29,6 +39,7 @@ export interface CreateViewTemplateOptions {
 export function createViewTemplate(options: CreateViewTemplateOptions) {
   // 兜底与 create-uniapp-view.template 的默认值保持一致; 模板选择与 setup 判据必须用同一个值
   const templateKey = options.template || 'vue3'
+  const isNvue = Boolean(options.nvue)
   let template: string
   if (options.customTemplate) {
     // 自定义模板整份接管, template 已无关, 因此不再校验它的合法性; 读取失败直接抛, 由 command.ts 统一转提示
@@ -37,6 +48,10 @@ export function createViewTemplate(options: CreateViewTemplateOptions) {
     if (!isFile)
       throw new Error(`自定义模板文件不存在或不是文件: ${options.customTemplate}`)
     template = fs.readFileSync(options.customTemplate, 'utf-8')
+  }
+  else if (isNvue) {
+    // nvue 模板不分 vue2 / vue3, template 在这里不生效, 同样不校验它的合法性
+    template = NVUE_TEMPLATES[options.component ? 'component' : 'page']
   }
   else {
     const templates = ALL_TEMPLATES[templateKey]
@@ -55,7 +70,8 @@ export function createViewTemplate(options: CreateViewTemplateOptions) {
 
   const scriptAttrs = handle([
     options.typescript && 'lang="ts"',
-    templateKey === 'vue3' && options.setup && 'setup',
+    // nvue 模板是选项式写法, 带上 setup 就写不出能跑的代码
+    !isNvue && templateKey === 'vue3' && options.setup && 'setup',
   ])
 
   const styleAttrs = handle([

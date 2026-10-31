@@ -55,6 +55,7 @@ export function createCommand(options: CreateCommandOptions) {
         template: configuration('template'),
         setup: configuration('setup'),
         scoped: configuration('scoped'),
+        nvue: configuration('nvue'),
         customTemplate: resolveWorkspacePath(uri, configuration(
           options.options?.component ? 'customComponentTemplate' : 'customPageTemplate',
         )),

@@ -27,6 +27,7 @@
 - 📦 可深度目录创建，写入 `pages.json` 后仍可保留注释
 - ✨ 可配置 `vue2 | vue3 | composition-api(vue2)` 模板，`vue3` 支持 `<script setup>`
 - 🎨 支持用自己写的模板文件替代内置模板（页面与组件各一份）
+- 📱 可切换生成 `.vue` 或 `.nvue`，nvue 用原生渲染对应的模板
 - 👕 可配置 `css | scss | less | stylus | sass` 预处理器类型
 - 🦾 `typescript` 为默认开发语言（可在设置中关闭）
 
@@ -59,6 +60,14 @@
 > 注意：`cli` 创建的项目若遇 vendor.js 过大，可以在 `package.json` 中添加参数 `--minimize`，具体参考官方文档：[dcloud.io](https://uniapp.dcloud.io/collocation/pages?id=subpackages)
 
 ![分包页面演示：创建分包页面并写入 subPackages](./public/subpackage-demo.gif)
+
+### nvue 页面与组件
+
+打开 `create-uniapp-view.nvue` 后，生成的文件后缀是 `.nvue`，内容换成 nvue 模板。`pages.json` 里的 `path` 和 vue 页面一样不带扩展名，注册逻辑没有区别。
+
+nvue 是 App 端的原生渲染，写法和 vue 页面有几处硬性差异：只有 flex 布局，`view` 默认宽高为 0，文字必须放在 `text` 里才能显示，字体大小和颜色只能设在 `text` 上。内置的 nvue 模板按这些规则写了一份能直接看见内容的骨架，用选项式写法，`vue2` 和 `vue3` 都能跑，所以不会带 `<script setup>`。
+
+想要别的 nvue 骨架就用自定义模板，它优先于 nvue 模板，`.nvue` 后缀仍然生效。
 
 ## 自定义模板
 
@@ -127,6 +136,7 @@
 | `create-uniapp-view.template` | `vue3` | 选择创建的模板，可选 `vue2`、`vue3`、`composition-api(vue2)` |
 | `create-uniapp-view.customPageTemplate` | 空 | 自定义页面模板文件的路径，相对路径以工作区根为基准；留空则使用内置模板。设置后忽略 `template` |
 | `create-uniapp-view.customComponentTemplate` | 空 | 自定义组件模板文件的路径，相对路径以工作区根为基准；留空则使用内置模板。设置后忽略 `template` |
+| `create-uniapp-view.nvue` | `false` | 创建 nvue 页面或组件：生成 `.nvue` 文件并使用 nvue 模板 |
 
 ## 命令
 

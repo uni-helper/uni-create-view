@@ -78,3 +78,46 @@ test('内置模板: 生成的每一行都不以空格结尾', () => {
     }
   }
 })
+
+test('nvue: 用 nvue 模板, 文字包在 text 里, 不走 vue 模板', () => {
+  const output = createViewTemplate({
+    nvue: true,
+    name: 'demo',
+    typescript: true,
+    template: 'vue3',
+    setup: true,
+  })
+  assert.match(output, /<text class="title">demo<\/text>/)
+  assert.match(output, /flex: 1;/)
+  assert.doesNotMatch(output, /defineComponent/)
+})
+
+test('nvue: 不校验 template 的非法值, 也不带 setup 属性', () => {
+  const output = createViewTemplate({
+    nvue: true,
+    name: 'demo',
+    template: 'nonsense',
+    setup: true,
+    typescript: true,
+  })
+  assert.match(output, /<script lang="ts">/)
+  assert.doesNotMatch(output, /<script[^>]*setup/)
+})
+
+test('nvue: 页面与组件模板不同', () => {
+  const page = createViewTemplate({ nvue: true, name: 'demo', typescript: true })
+  const component = createViewTemplate({
+    nvue: true,
+    name: 'demo',
+    typescript: true,
+    component: true,
+  })
+  assert.match(component, /props: \{\}/)
+  assert.doesNotMatch(page, /props: \{\}/)
+  assert.notEqual(page, component)
+})
+
+test('nvue: 自定义模板仍然优先', () => {
+  const file = fixture('nvue-custom.txt', '<view>custom</view>')
+  assert.equal(createViewTemplate({ nvue: true, customTemplate: file, name: 'demo' }), '<view>custom</view>')
+})

@@ -30,10 +30,10 @@ npm run release      # bumpp：提版本号、提交、打 tag 并推送; v* tag
 |---|---|
 | `src/extension.ts` | 入口，注册三个命令 |
 | `src/command.ts` | 命令封装：拦住没有 URI 的情况（从命令面板调用时提示右键），弹输入框，拆分输入，带 scope 读配置并把模板路径解析成绝对路径，把生成阶段的异常统一转成提示 |
-| `src/generate.ts` | 主流程：校验目标目录，渲染模板，覆盖前弹模态确认，建目录（`directory` 打开时）并写入 `.vue`，再调 `writePagesJson` |
+| `src/generate.ts` | 主流程：校验目标目录，渲染模板，覆盖前弹模态确认，建目录（`directory` 打开时）并写入 `.vue` / `.nvue`，再调 `writePagesJson` |
 | `src/utils.ts` | `logger`（面向用户的消息框）、`getConfiguration`（读带 `create-uniapp-view.` 前缀的完整 key，支持传 scope）、`resolveWorkspacePath`（把配置里的相对路径按工作区根解析）、`confirmOverwrite`（模态框，关闭或按 Esc 视为拒绝）、`upwardSearchFile` |
-| `src/template.ts` | 模板来源：设了 `customPageTemplate` / `customComponentTemplate` 就读那份用户文件，否则按 `template` × `component` 从六份内置模板里选一份；都走 ejs 渲染；模板名未知时抛错 |
-| `src/templates/*.ts` | 六份 ejs 模板字符串：页面 / 组件 × vue2 / vue3 / composition-api |
+| `src/template.ts` | 模板来源：设了 `customPageTemplate` / `customComponentTemplate` 就读那份用户文件；否则开了 `nvue` 用两份 nvue 模板；再否则按 `template` × `component` 从六份内置模板里选一份。都走 ejs 渲染；内置模板名未知时抛错 |
+| `src/templates/*.ts` | 八份 ejs 模板字符串：六份 vue 模板（页面 / 组件 × vue2 / vue3 / composition-api）+ 两份 nvue 模板（页面 / 组件，选项式写法） |
 | `test/template.test.mjs` | `node:test` 用例：自定义模板分支、`template` 优先级、报错文案、内置模板无行尾空格。从 `out/` 导入，跑之前必须先编译 |
 
 ### 行为约束（不要改坏）
@@ -48,6 +48,7 @@ npm run release      # bumpp：提版本号、提交、打 tag 并推送; v* tag
 - 自定义模板整份接管：设了 `customPageTemplate` / `customComponentTemplate` 就只读那份文件，`template` 被忽略、也不再校验它的合法性（非法值不再报错）。文件不存在或指向目录时报错并带出路径。
 - 渲染模板与覆盖确认都必须发生在建目录之前：模板文件缺失、ejs 标签写错、用户在覆盖对话框点取消，三种情况都不应在磁盘上留下空目录。
 - 资源级配置（`scope: "resource"`，目前是 `customPageTemplate` / `customComponentTemplate`）必须带 scope 读：`getConfiguration(section, uri)`。不传 scope 时 `workspace.getConfiguration()` 读不到按文件夹设置的值。
+- nvue（`create-uniapp-view.nvue`）只换文件名后缀成 `.nvue` 并改用 nvue 模板，`pages.json` 里的 `path` 不带扩展名，因此写 `pages.json` 的逻辑不用改。nvue 是原生渲染，只有 flex 布局、`view` 默认宽高为 0、文字必须放在 `text` 里，所以不能复用 vue 模板；两份 nvue 模板用选项式写法（vue2 / vue3 都能跑），`scriptAttrs` 里必须去掉 `setup`。
 - `template.ts` 对空值和非法值的处理不同：空值回落到 `vue3`，非空但未知的名字抛错。手改 `settings.json` 能绕过 enum 约束，这个抛错是有意为之。设了自定义模板时这个校验不再触发（见上一条），但 `vue3` 仍然参与 `scriptAttrs` 里 `setup` 的判断。
 
 ## 约定

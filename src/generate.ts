@@ -30,6 +30,8 @@ export interface GenerateOptions {
   setup?: boolean
   scoped?: boolean
   subcontract?: boolean
+  /** 生成 .nvue 文件, 内容用 nvue 模板 */
+  nvue?: boolean
   /** 自定义模板文件的绝对路径, 为空则使用内置模板 */
   customTemplate?: string
 }
@@ -60,9 +62,11 @@ export async function generate(options: GenerateOptions): Promise<GenerateResult
 
   // #region 生成模板
   const isIndex = options.nameType === 'index'
+  // pages.json 里的 path 不带扩展名, 所以只有文件名需要跟着 nvue 变
+  const extension = options.nvue ? 'nvue' : 'vue'
   const filePath = options.directory
-    ? `${names.view}/${isIndex ? 'index' : names.view}.vue`
-    : `${names.view}.vue`
+    ? `${names.view}/${isIndex ? 'index' : names.view}.${extension}`
+    : `${names.view}.${extension}`
   const targetPath = path.resolve(options.path, filePath)
   // 渲染提前到建目录/写文件之前: 模板缺失或 ejs 语法错误时不应留下目录或文件
   const template = createViewTemplate({ name: names.view, ...options })

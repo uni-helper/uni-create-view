@@ -102,6 +102,11 @@
           "default": "",
           "scope": "resource",
           "description": "自定义组件模板文件的路径，相对路径以工作区根目录为基准；留空则使用内置模板。设置后忽略 template 配置"
+        },
+        "create-uniapp-view.nvue": {
+          "type": "boolean",
+          "default": false,
+          "description": "创建 nvue 页面或组件（生成 .nvue 文件，内容使用 nvue 模板）"
         }
       }
     },

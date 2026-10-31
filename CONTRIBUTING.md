@@ -18,7 +18,7 @@ uni-create-view/
 │   ├── command.ts            # 命令实现：输入框、名称与标题拆分、读配置、错误转提示
 │   ├── generate.ts           # 核心逻辑：创建 .vue 文件、向上查找并写入 pages.json（含分包）
 │   ├── template.ts           # 模板来源：自定义模板文件或内置模板，ejs 渲染
-│   ├── templates/            # 六份内置模板：页面/组件 × vue2/vue3/composition-api
+│   ├── templates/            # 八份内置模板：六份 vue（页面/组件 × vue2/vue3/composition-api）+ 两份 nvue
 │   └── utils.ts              # 向上查找文件、覆盖确认、日志提示等工具
 ├── test/                     # node:test 用例，从 out/ 导入编译结果
 ├── public/                   # banner、logo 与 README 演示动图，随 vsix 打包
