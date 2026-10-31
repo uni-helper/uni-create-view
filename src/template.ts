@@ -1,3 +1,4 @@
+import fs from 'node:fs'
 import * as ejs from 'ejs'
 import cv2c from './templates/component-composition'
 import cv2 from './templates/component-vue2'
@@ -21,16 +22,29 @@ export interface CreateViewTemplateOptions {
   component?: boolean
   setup?: boolean
   scoped?: boolean
+  /** 自定义模板文件的绝对路径，设置后整份接管，忽略 template */
+  customTemplate?: string
 }
 
 export function createViewTemplate(options: CreateViewTemplateOptions) {
   // 兜底与 create-uniapp-view.template 的默认值保持一致; 模板选择与 setup 判据必须用同一个值
   const templateKey = options.template || 'vue3'
-  const templates = ALL_TEMPLATES[templateKey]
-  // 手改 settings.json 可绕过 enum 约束, 与其静默渲染错模板不如明确报错 (由 command.ts 统一转提示)
-  if (!templates)
-    throw new Error(`未知模板: ${templateKey}`)
-  const template = templates[options.component ? 'component' : 'page']
+  let template: string
+  if (options.customTemplate) {
+    // 自定义模板整份接管, template 已无关, 因此不再校验它的合法性; 读取失败直接抛, 由 command.ts 统一转提示
+    // 只判 existsSync 不够: 指向目录时 readFileSync 抛 EISDIR, 报错里没有路径
+    const isFile = fs.existsSync(options.customTemplate) && fs.statSync(options.customTemplate).isFile()
+    if (!isFile)
+      throw new Error(`自定义模板文件不存在或不是文件: ${options.customTemplate}`)
+    template = fs.readFileSync(options.customTemplate, 'utf-8')
+  }
+  else {
+    const templates = ALL_TEMPLATES[templateKey]
+    // 手改 settings.json 可绕过 enum 约束, 与其静默渲染错模板不如明确报错 (由 command.ts 统一转提示)
+    if (!templates)
+      throw new Error(`未知模板: ${templateKey}`)
+    template = templates[options.component ? 'component' : 'page']
+  }
 
   const handle = (attrs: (string | boolean | undefined)[]) => {
     const _v = attrs.filter(Boolean).join(' ').trim()

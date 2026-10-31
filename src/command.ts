@@ -1,6 +1,6 @@
 import * as vscode from 'vscode'
 import { generate } from './generate'
-import { getConfiguration, logger } from './utils'
+import { getConfiguration, logger, resolveWorkspacePath } from './utils'
 
 export interface CreateCommandOptions {
   /** 展示名称, 用于输入提示与错误文案 (命令标识符见 command 字段) */
@@ -12,12 +12,14 @@ export interface CreateCommandOptions {
 }
 
 export function createCommand(options: CreateCommandOptions) {
-  return vscode.commands.registerCommand(options.command, async (uri) => {
+  return vscode.commands.registerCommand(options.command, async (uri?: vscode.Uri) => {
     // 从命令面板调用时没有右键的目录上下文, 在弹输入框前先提示
     if (!uri) {
       logger('error', '请在资源管理器中右键目标文件夹后重试')
       return
     }
+    // 带 scope 读取资源级配置, 否则多根工作区里按文件夹设置的项不生效
+    const configuration = (key: string) => getConfiguration(`create-uniapp-view.${key}`, uri)
     const componentText = `输入${options.name}名称`
     const pageText = `${componentText}，空格分隔字段（navigationBarTitleText）`
     // 提示语由 component 标志决定, 与 generate 的页面/组件分流保持同一判据
@@ -43,16 +45,19 @@ export function createCommand(options: CreateCommandOptions) {
           view,
           page: titleParts.join(' '),
         },
-        nameType: getConfiguration('create-uniapp-view.name'),
+        nameType: configuration('name'),
         path: uri.fsPath,
         component: options.options?.component,
         subcontract: options.options?.subcontract,
-        typescript: getConfiguration('create-uniapp-view.typescript'),
-        styleType: getConfiguration('create-uniapp-view.style'),
-        directory: getConfiguration('create-uniapp-view.directory'),
-        template: getConfiguration('create-uniapp-view.template'),
-        setup: getConfiguration('create-uniapp-view.setup'),
-        scoped: getConfiguration('create-uniapp-view.scoped'),
+        typescript: configuration('typescript'),
+        styleType: configuration('style'),
+        directory: configuration('directory'),
+        template: configuration('template'),
+        setup: configuration('setup'),
+        scoped: configuration('scoped'),
+        customTemplate: resolveWorkspacePath(uri, configuration(
+          options.options?.component ? 'customComponentTemplate' : 'customPageTemplate',
+        )),
       })
       logger(status, message)
     }

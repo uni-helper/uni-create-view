@@ -51,9 +51,7 @@
           "description": "创建视图时是否创建同名文件夹"
         },
         "create-uniapp-view.name": {
-          "type": [
-            "string"
-          ],
+          "type": "string",
           "default": "index",
           "enum": [
             "index",
@@ -62,9 +60,7 @@
           "description": "创建文件夹中生成的文件名"
         },
         "create-uniapp-view.style": {
-          "type": [
-            "string"
-          ],
+          "type": "string",
           "default": "css",
           "enum": [
             "css",
@@ -86,9 +82,7 @@
           "description": "创建 vue3 模板时，是否使用 <script setup>"
         },
         "create-uniapp-view.template": {
-          "type": [
-            "string"
-          ],
+          "type": "string",
           "default": "vue3",
           "enum": [
             "vue2",
@@ -96,6 +90,18 @@
             "composition-api(vue2)"
           ],
           "description": "选择创建的模板"
+        },
+        "create-uniapp-view.customPageTemplate": {
+          "type": "string",
+          "default": "",
+          "scope": "resource",
+          "description": "自定义页面模板文件的路径，相对路径以工作区根目录为基准；留空则使用内置模板。设置后忽略 template 配置"
+        },
+        "create-uniapp-view.customComponentTemplate": {
+          "type": "string",
+          "default": "",
+          "scope": "resource",
+          "description": "自定义组件模板文件的路径，相对路径以工作区根目录为基准；留空则使用内置模板。设置后忽略 template 配置"
         }
       }
     },

@@ -29,6 +29,8 @@ export interface GenerateOptions {
   setup?: boolean
   scoped?: boolean
   subcontract?: boolean
+  /** 自定义模板文件的绝对路径, 为空则使用内置模板 */
+  customTemplate?: string
 }
 export interface GenerateResult {
   status: string
@@ -48,9 +50,6 @@ export async function generate(options: GenerateOptions): Promise<GenerateResult
       return { status: 'error', message: '创建错误, 该文件夹已存在!' }
     if (fs.existsSync(directoryPath))
       return { status: 'error', message: '创建错误, 已存在同名文件, 无法创建文件夹!' }
-    // 同步创建: 后面的 writeFileSync 依赖目录已存在, 异步会与之竞态
-    // mkdir recursive 不因目录已存在而抛错
-    fs.mkdirSync(directoryPath, { recursive: true })
   }
   // #endregion
 
@@ -60,13 +59,23 @@ export async function generate(options: GenerateOptions): Promise<GenerateResult
     ? `${names.view}/${isIndex ? 'index' : names.view}.vue`
     : `${names.view}.vue`
   const targetPath = path.resolve(options.path, filePath)
+  // 渲染提前到建目录/写文件之前: 模板缺失或 ejs 语法错误时不应留下目录或文件
+  const template = createViewTemplate({ name: names.view, ...options })
   if (fs.existsSync(targetPath)) {
     if (fs.statSync(targetPath).isDirectory())
       return { status: 'error', message: '创建错误, 已存在同名文件夹, 请更换名称!' }
+    // 覆盖确认也放在建目录之前, 用户取消时不留空目录
     if (!(await confirmOverwrite(filePath)))
       return { status: 'warning', message: '已取消创建, 未覆盖已有文件' }
   }
-  const template = createViewTemplate({ name: names.view, ...options })
+  // #endregion
+
+  // #region 写文件
+  if (options.directory) {
+    // 同步创建: 后面的 writeFileSync 依赖目录已存在, 异步会与之竞态
+    // mkdir recursive 不因目录已存在而抛错
+    fs.mkdirSync(directoryPath, { recursive: true })
+  }
   fs.writeFileSync(targetPath, template, { flag: 'w' })
   // #endregion
 

@@ -16,8 +16,20 @@ export function logger(type: string, message = '') {
   }
 }
 
-export function getConfiguration(section: string) {
-  return vscode.workspace.getConfiguration().get<any>(section)
+export function getConfiguration(section: string, scope?: vscode.ConfigurationScope) {
+  // 不传 scope 时资源级（scope: resource）的覆盖值不生效，读取这类设置必须带上 Uri
+  return vscode.workspace.getConfiguration(undefined, scope).get<any>(section)
+}
+
+/**
+ * 把配置里的路径解析成绝对路径。相对路径以工作区根目录为基准，
+ * 这样模板文件能提交进仓库供团队共用；绝对路径原样保留。
+ */
+export function resolveWorkspacePath(uri: vscode.Uri, filePath?: string) {
+  if (!filePath)
+    return undefined
+  const base = vscode.workspace.getWorkspaceFolder(uri)?.uri.fsPath ?? uri.fsPath
+  return path.resolve(base, filePath)
 }
 
 // 覆盖已有文件前的模态确认; 用户关闭弹窗或按 Esc 视为拒绝
