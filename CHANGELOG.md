@@ -1,5 +1,9 @@
 # 改动日志
 
+## [2.3.1] - 2026-11-01
+
+- 修复 CI 发布流程
+
 ## [2.3.0] - 2026-11-01
 
 - 新增自定义模板：`create-uniapp-view.customPageTemplate` / `customComponentTemplate` 指向自己的模板文件，相对路径按工作区根目录算，可以提交进仓库跟着项目走。设置后模板整份接管，`template` 配置不再生效
