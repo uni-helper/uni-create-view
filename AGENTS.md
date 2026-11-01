@@ -22,7 +22,7 @@ npm run lint:fix
 npm run release      # bumpp：提版本号、提交、打 tag 并推送; v* tag 触发 .github/workflows/release.yml
 ```
 
-发布流程：`vpx @vscode/vsce@3.9.2 publish`（VSCE_PAT）→ `vpx ovsx@1.2.0 publish`（OVSX_PAT）→ changelogithub 创建 GitHub Release（GITHUB_TOKEN）。`@vscode/vsce` 和 `ovsx` 不在 devDependencies 里，`vpx` 会从 registry 拉取，所以版本号写死在 workflow 里。
+发布流程：`vpx @vscode/vsce publish --oidc` → `vpx ovsx@1.2.0 publish`（OVSX_PAT）→ changelogithub 创建 GitHub Release（GITHUB_TOKEN）。`@vscode/vsce` 和 `ovsx` 不在 devDependencies 里，`vpx` 会从 registry 拉取，所以版本号写死在 workflow 里。
 
 ## 架构
 

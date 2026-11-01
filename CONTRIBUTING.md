@@ -85,7 +85,7 @@ npm test             # 先 tsc 再 node --test
 
 ## 发布
 
-维护者先在 CHANGELOG.md 补上版本条目，然后运行 `npm run release`（[bumpp](https://github.com/antfu/bumpp) 提升版本、提交、打 tag 并推送）；tag 推送会触发 Release workflow，发布到 VSCode Marketplace（`VSCE_PAT`）与 OpenVSX（`OVSX_PAT`），并用 changelogithub 创建 GitHub Release。`@vscode/vsce`、`ovsx` 不是 devDependencies，workflow 里用 `vpx @vscode/vsce@3.9.2`、`vpx ovsx@1.2.0` 锁住版本运行，升级发布工具时改这两行的版本号。
+维护者先在 CHANGELOG.md 补上版本条目，然后运行 `npm run release`（[bumpp](https://github.com/antfu/bumpp) 提升版本、提交、打 tag 并推送）；tag 推送会触发 Release workflow，发布到 VSCode Marketplace（OIDC）与 OpenVSX（`OVSX_PAT`），并用 changelogithub 创建 GitHub Release。
 
 ## 行为准则
 
